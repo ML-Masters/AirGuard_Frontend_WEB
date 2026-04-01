@@ -8,9 +8,26 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "AirGuard Cameroun - Dashboard",
+  title: "AirGuard Cameroun",
   description:
-    "Tableau de bord de surveillance et prédiction de la qualité de l'air au Cameroun",
+    "Plateforme de surveillance et prediction de la qualite de l'air au Cameroun. IA, predictions multi-risques et alertes en temps reel pour 40 villes.",
+  openGraph: {
+    title: "AirGuard Cameroun",
+    description:
+      "Surveillance et prediction de la qualite de l'air au Cameroun par intelligence artificielle.",
+    siteName: "AirGuard Cameroun",
+    type: "website",
+    locale: "fr_FR",
+  },
+  twitter: {
+    card: "summary",
+    title: "AirGuard Cameroun",
+    description:
+      "Surveillance et prediction de la qualite de l'air au Cameroun par intelligence artificielle.",
+  },
+  icons: {
+    icon: "/icon.svg",
+  },
 };
 
 export default function RootLayout({

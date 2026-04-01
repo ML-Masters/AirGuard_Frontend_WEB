@@ -201,7 +201,7 @@ export default function AlertsPage() {
                     )}
                     {alert.donnees_declencheur && (
                       <p className="text-xs text-purple-600 mt-1">
-                        AQI: {alert.donnees_declencheur.aqi} — PM2.5: {alert.donnees_declencheur.pm25} — {alert.donnees_declencheur.date}
+                        AQI: {String(alert.donnees_declencheur.aqi)} — PM2.5: {String(alert.donnees_declencheur.pm25)} — {String(alert.donnees_declencheur.date)}
                       </p>
                     )}
                   </div>

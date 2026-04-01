@@ -10,6 +10,7 @@ import {
   Bell,
   FileText,
   Code2,
+  Upload,
   Wind,
 } from "lucide-react";
 
@@ -20,6 +21,7 @@ const NAV_ITEMS = [
   { href: "/fr/admin/predictions", label: "Prédictions", icon: BrainCircuit },
   { href: "/fr/admin/alerts", label: "Alertes", icon: Bell },
   { href: "/fr/admin/reports", label: "Rapports", icon: FileText },
+  { href: "/fr/admin/import", label: "Import données", icon: Upload },
   { href: "/fr/admin/api-docs", label: "API Docs", icon: Code2 },
 ];
 

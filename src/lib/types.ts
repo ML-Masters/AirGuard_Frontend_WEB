@@ -42,10 +42,21 @@ export interface NationalKPIs {
 export interface Alert {
   id: number;
   ville: number;
+  ville_nom?: string;
+  ville_region?: string;
   date_creation: string;
+  date_publication: string | null;
   niveau_severite: "modere" | "grave" | "critique";
+  statut: "brouillon" | "publiee" | "ignoree";
+  source: "ml" | "admin";
   message_fr: string;
   message_en: string;
+  recommandations_residents_fr: string;
+  recommandations_residents_en: string;
+  recommandations_visiteurs_fr: string;
+  recommandations_visiteurs_en: string;
+  duree_estimee: string;
+  donnees_declencheur: Record<string, unknown> | null;
   est_active: boolean;
 }
 

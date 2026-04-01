@@ -1,9 +1,10 @@
 "use client";
 
 import { MapContainer, TileLayer, CircleMarker, Popup } from "react-leaflet";
+import { useTranslations } from "next-intl";
 import type { Ville, AQICategory } from "@/lib/types";
 import { CAMEROON_CENTER, CAMEROON_ZOOM } from "@/lib/constants";
-import { getAQIColor, getAQILabel } from "@/lib/utils";
+import { getAQIColor } from "@/lib/utils";
 import "leaflet/dist/leaflet.css";
 
 interface CityAQI {
@@ -18,6 +19,7 @@ interface DashboardMapProps {
 }
 
 export default function DashboardMap({ cities, height = "400px" }: DashboardMapProps) {
+  const t = useTranslations("aqi");
   return (
     <div className="bg-surface rounded-2xl border border-border overflow-hidden" style={{ height }}>
       <MapContainer
@@ -50,7 +52,7 @@ export default function DashboardMap({ cities, height = "400px" }: DashboardMapP
                   AQI: <strong>{c.indice_aqi}</strong>
                 </p>
                 <p style={{ color: getAQIColor(c.categorie) }}>
-                  {getAQILabel(c.categorie)}
+                  {t(c.categorie)}
                 </p>
               </div>
             </Popup>

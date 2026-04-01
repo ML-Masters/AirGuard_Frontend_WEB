@@ -2,11 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations, useLocale } from "next-intl";
 import { Wind, LogIn, Loader2, Eye, EyeOff } from "lucide-react";
 import { login } from "@/lib/auth";
 
 export default function LoginPage() {
   const router = useRouter();
+  const t = useTranslations("login");
+  const locale = useLocale();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -22,9 +25,9 @@ export default function LoginPage() {
     setLoading(false);
 
     if (result.success) {
-      router.push("/fr/admin");
+      router.push(`/${locale}/admin`);
     } else {
-      setError(result.error || "Erreur de connexion");
+      setError(result.error || t("error"));
     }
   };
 
@@ -37,14 +40,14 @@ export default function LoginPage() {
             <Wind className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold text-white">AirGuard</h1>
-          <p className="text-white/70 mt-1 text-sm">Cameroun — Tableau de bord</p>
+          <p className="text-white/70 mt-1 text-sm">{t("subtitle")}</p>
         </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="bg-white rounded-2xl p-6 sm:p-8 shadow-2xl">
-          <h2 className="text-lg sm:text-xl font-bold text-text mb-1">Connexion</h2>
+          <h2 className="text-lg sm:text-xl font-bold text-text mb-1">{t("title")}</h2>
           <p className="text-text-secondary text-sm mb-6">
-            Accédez au tableau de bord de surveillance
+            {t("description")}
           </p>
 
           {error && (
@@ -56,13 +59,13 @@ export default function LoginPage() {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-text mb-1.5">
-                Adresse email
+                {t("email")}
               </label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@airguard.cm"
+                placeholder={t("emailPlaceholder")}
                 required
                 className="w-full px-4 py-3 rounded-xl border border-border text-text placeholder:text-text-secondary/50 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
               />
@@ -70,14 +73,14 @@ export default function LoginPage() {
 
             <div>
               <label className="block text-sm font-medium text-text mb-1.5">
-                Mot de passe
+                {t("password")}
               </label>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Votre mot de passe"
+                  placeholder={t("passwordPlaceholder")}
                   required
                   className="w-full px-4 py-3 pr-12 rounded-xl border border-border text-text placeholder:text-text-secondary/50 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
                 />
@@ -101,14 +104,14 @@ export default function LoginPage() {
               ) : (
                 <>
                   <LogIn className="w-5 h-5" />
-                  Se connecter
+                  {t("submit")}
                 </>
               )}
             </button>
           </div>
 
           <p className="text-center text-text-secondary text-xs mt-6">
-            Hackathon IndabaX Cameroon 2026 — ML Masters
+            {t("footer")}
           </p>
         </form>
       </div>

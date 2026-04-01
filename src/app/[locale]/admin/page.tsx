@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useTranslations, useLocale } from "next-intl";
 import { Wind, AlertTriangle, MapPin, Activity } from "lucide-react";
 import KPICard from "@/components/ui/KPICard";
 import SeverityBadge from "@/components/ui/SeverityBadge";
@@ -10,6 +11,7 @@ import { KPISkeleton, ChartSkeleton, TableSkeleton } from "@/components/ui/Loadi
 import { useVilles, useActiveAlerts, useAirQuality } from "@/hooks/useData";
 import { timeAgo } from "@/lib/utils";
 import type { AQICategory, Ville } from "@/lib/types";
+import ExportButton from "@/components/ui/ExportButton";
 
 const DashboardMap = dynamic(() => import("@/components/map/DashboardMap"), {
   ssr: false,
@@ -19,6 +21,8 @@ const DashboardMap = dynamic(() => import("@/components/map/DashboardMap"), {
 });
 
 export default function DashboardHome() {
+  const t = useTranslations("dashboard");
+  const locale = useLocale();
   const { data: villes, isLoading: loadingVilles } = useVilles();
   const { data: alerts, isLoading: loadingAlerts } = useActiveAlerts();
   const { data: airQuality, isLoading: loadingAQ } = useAirQuality("est_prediction=false");
@@ -58,6 +62,7 @@ export default function DashboardHome() {
     .filter(Boolean) as { ville: Ville; indice_aqi: number; categorie: AQICategory }[];
 
   // 30-day chart data
+  const dateLocale = locale === "en" ? "en-GB" : "fr-FR";
   const chartData: { date: string; aqi: number }[] = [];
   if (airQuality) {
     const byDate = new Map<string, number[]>();
@@ -69,7 +74,7 @@ export default function DashboardHome() {
     const sorted = Array.from(byDate.entries()).sort((a, b) => a[0].localeCompare(b[0]));
     for (const [date, vals] of sorted.slice(-30)) {
       chartData.push({
-        date: new Date(date).toLocaleDateString("fr-FR", { day: "2-digit", month: "short" }),
+        date: new Date(date).toLocaleDateString(dateLocale, { day: "2-digit", month: "short" }),
         aqi: Math.round(vals.reduce((s, v) => s + v, 0) / vals.length),
       });
     }
@@ -78,40 +83,54 @@ export default function DashboardHome() {
   // Recent alerts (top 5)
   const recentAlerts = alerts?.slice(0, 5) || [];
 
+  const exportData = Array.from(latestByCity.entries()).map(([villeId, aq]) => {
+    const ville = villeMap.get(villeId);
+    return {
+      ville: ville?.nom || `#${villeId}`,
+      region: ville?.region_nom || '',
+      date: aq.date_cible,
+      indice_aqi: aq.indice_aqi,
+      categorie: aq.categorie,
+    };
+  });
+
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold text-text">Tableau de bord</h1>
-        <p className="text-text-secondary text-sm mt-1">
-          Vue d&apos;ensemble de la qualité de l&apos;air au Cameroun
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-text">{t("title")}</h1>
+          <p className="text-text-secondary text-sm mt-1">
+            {t("subtitle")}
+          </p>
+        </div>
+        <ExportButton data={exportData} filename="airguard_aqi_export.csv" />
       </div>
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <KPICard
-          title="AQI moyen national"
-          value={avgAQI || "—"}
+          title={t("avgAqi")}
+          value={avgAQI || "\u2014"}
           icon={<Wind className="w-6 h-6" />}
           color="#0F766E"
-          subtitle={cityAQIs.length > 0 ? `sur ${cityAQIs.length} villes` : undefined}
+          subtitle={cityAQIs.length > 0 ? t("onCities", { count: cityAQIs.length }) : undefined}
         />
         <KPICard
-          title="Villes en zone critique"
+          title={t("criticalCities")}
           value={criticalCities}
           icon={<AlertTriangle className="w-6 h-6" />}
           color="#EF4444"
-          subtitle="Malsain ou pire"
+          subtitle={t("unhealthyOrWorse")}
         />
         <KPICard
-          title="Villes surveillées"
+          title={t("monitoredCities")}
           value={villes?.length || 0}
           icon={<MapPin className="w-6 h-6" />}
           color="#3B82F6"
-          subtitle="10 régions"
+          subtitle={`10 ${t("regions")}`}
         />
         <KPICard
-          title="Alertes actives"
+          title={t("activeAlerts")}
           value={alerts?.length || 0}
           icon={<Activity className="w-6 h-6" />}
           color="#F59E0B"
@@ -124,9 +143,9 @@ export default function DashboardHome() {
           <DashboardMap cities={mapCities} height="420px" />
         </div>
         <div className="bg-surface rounded-2xl border border-border p-6">
-          <h3 className="text-sm font-semibold text-text mb-4">Alertes récentes</h3>
+          <h3 className="text-sm font-semibold text-text mb-4">{t("recentAlerts")}</h3>
           {recentAlerts.length === 0 ? (
-            <p className="text-text-secondary text-sm">Aucune alerte active</p>
+            <p className="text-text-secondary text-sm">{t("noAlerts")}</p>
           ) : (
             <div className="space-y-3">
               {recentAlerts.map((alert) => {

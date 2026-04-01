@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations, useLocale } from "next-intl";
 import {
   LayoutDashboard,
   Map,
@@ -18,21 +19,32 @@ import {
   X,
 } from "lucide-react";
 import { logout } from "@/lib/auth";
+import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 
-const NAV_ITEMS = [
-  { href: "/fr/admin", label: "Tableau de bord", icon: LayoutDashboard },
-  { href: "/fr/admin/map", label: "Carte", icon: Map },
-  { href: "/fr/admin/analytics", label: "Analytics", icon: BarChart3 },
-  { href: "/fr/admin/predictions", label: "Prédictions", icon: BrainCircuit },
-  { href: "/fr/admin/alerts", label: "Alertes", icon: Bell },
-  { href: "/fr/admin/reports", label: "Rapports", icon: FileText },
-  { href: "/fr/admin/import", label: "Import données", icon: Upload },
-  { href: "/fr/admin/api-docs", label: "API Docs", icon: Code2 },
+const NAV_KEYS = [
+  { path: "admin", key: "dashboard", icon: LayoutDashboard },
+  { path: "admin/map", key: "map", icon: Map },
+  { path: "admin/analytics", key: "analytics", icon: BarChart3 },
+  { path: "admin/predictions", key: "predictions", icon: BrainCircuit },
+  { path: "admin/alerts", key: "alerts", icon: Bell },
+  { path: "admin/reports", key: "reports", icon: FileText },
+  { path: "admin/import", key: "import", icon: Upload },
+  { path: "admin/api-docs", key: "apiDocs", icon: Code2 },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const t = useTranslations();
+  const locale = useLocale();
+
+  const navItems = NAV_KEYS.map((item) => ({
+    href: `/${locale}/${item.path}`,
+    label: t(`nav.${item.key}`),
+    icon: item.icon,
+  }));
+
+  const adminBase = `/${locale}/admin`;
 
   const navContent = (
     <>
@@ -53,10 +65,10 @@ export default function Sidebar() {
       </div>
 
       <nav className="flex-1 px-3 mt-4 space-y-1 overflow-y-auto">
-        {NAV_ITEMS.map((item) => {
+        {navItems.map((item) => {
           const isActive =
             pathname === item.href ||
-            (item.href !== "/fr/admin" && pathname.startsWith(item.href));
+            (item.href !== adminBase && pathname.startsWith(item.href));
           const Icon = item.icon;
 
           return (
@@ -78,15 +90,16 @@ export default function Sidebar() {
       </nav>
 
       <div className="p-4 border-t border-white/10 space-y-3">
+        <LanguageSwitcher />
         <button
           onClick={logout}
           className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-white/60 hover:text-white hover:bg-white/10 transition-colors w-full"
         >
           <LogOut className="w-5 h-5" />
-          Déconnexion
+          {t("common.logout")}
         </button>
         <p className="text-white/40 text-xs text-center">
-          IndabaX Cameroon 2026
+          {t("common.footer")}
         </p>
       </div>
     </>

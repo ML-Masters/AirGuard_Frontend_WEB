@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { MessageCircle, X, Send, Loader2 } from "lucide-react";
 import { api } from "@/lib/api";
 
@@ -10,10 +11,11 @@ interface Message {
 }
 
 export default function ChatWidget() {
+  const t = useTranslations("chat");
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([
-    { role: "bot", text: "Bonjour ! Je suis AirGuard Bot. Posez-moi vos questions sur la qualité de l'air au Cameroun." },
+    { role: "bot", text: t("greeting") },
   ]);
   const [loading, setLoading] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
@@ -34,7 +36,7 @@ export default function ChatWidget() {
       const res = await api.chat(msg);
       setMessages((prev) => [...prev, { role: "bot", text: res.response }]);
     } catch {
-      setMessages((prev) => [...prev, { role: "bot", text: "Désolé, je suis temporairement indisponible." }]);
+      setMessages((prev) => [...prev, { role: "bot", text: t("errorMessage") }]);
     } finally {
       setLoading(false);
     }
@@ -98,7 +100,7 @@ export default function ChatWidget() {
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Posez votre question..."
+            placeholder={t("placeholder")}
             className="flex-1 px-3 py-2 rounded-xl border border-border text-sm focus:outline-none focus:border-primary"
           />
           <button

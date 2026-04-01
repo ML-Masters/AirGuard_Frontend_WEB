@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useTranslations, useLocale } from "next-intl";
 import {
   BarChart,
   Bar,
@@ -18,8 +19,13 @@ import SeverityBadge from "@/components/ui/SeverityBadge";
 import { formatDate, timeAgo } from "@/lib/utils";
 import { fetchWithAuth } from "@/lib/auth";
 import { API_BASE_URL } from "@/lib/constants";
+import ExportButton from "@/components/ui/ExportButton";
 
 export default function AlertsPage() {
+  const t = useTranslations("alerts");
+  const tc = useTranslations("common");
+  const ts = useTranslations("severity");
+  const locale = useLocale();
   const { data: alerts, mutate: refreshAlerts } = useAlerts();
   const { data: villes } = useVilles();
   const [filterSeverity, setFilterSeverity] = useState<string>("all");
@@ -63,6 +69,8 @@ export default function AlertsPage() {
   const criticalCount = alerts?.filter((a) => a.niveau_severite === "critique" && a.est_active).length || 0;
   const draftCount = drafts.length;
 
+  const dateLocale = locale === "en" ? "en-GB" : "fr-FR";
+
   // Timeline data
   const timelineData = useMemo(() => {
     if (!alerts) return [];
@@ -77,10 +85,10 @@ export default function AlertsPage() {
       .sort((a, b) => a[0].localeCompare(b[0]))
       .slice(-30)
       .map(([date, counts]) => ({
-        date: new Date(date).toLocaleDateString("fr-FR", { day: "2-digit", month: "short" }),
+        date: new Date(date).toLocaleDateString(dateLocale, { day: "2-digit", month: "short" }),
         ...counts,
       }));
-  }, [alerts]);
+  }, [alerts, dateLocale]);
 
   const handleScan = async () => {
     setScanning(true);
@@ -92,10 +100,10 @@ export default function AlertsPage() {
         setScanResult(data.message);
         refreshAlerts();
       } else {
-        setScanResult(data.error || "Erreur lors du scan");
+        setScanResult(data.error || t("scanError"));
       }
     } catch {
-      setScanResult("Impossible de contacter le serveur");
+      setScanResult(t("serverError"));
     }
     setScanning(false);
   };
@@ -127,19 +135,33 @@ export default function AlertsPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-text">Alertes</h1>
+          <h1 className="text-2xl font-bold text-text">{t("title")}</h1>
           <p className="text-text-secondary text-sm mt-1">
-            Gestion et historique des alertes qualité de l&apos;air
+            {t("subtitle")}
           </p>
         </div>
-        <button
-          onClick={handleScan}
-          disabled={scanning}
-          className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl font-medium hover:bg-primary-dark transition-colors disabled:opacity-50"
-        >
-          {scanning ? <Loader2 className="w-4 h-4 animate-spin" /> : <BrainCircuit className="w-4 h-4" />}
-          Scanner les alertes ML
-        </button>
+        <div className="flex items-center gap-3">
+          <ExportButton
+            data={filtered.map((a) => ({
+              ville: villeMap.get(a.ville) || `#${a.ville}`,
+              severite: a.niveau_severite,
+              statut: a.statut,
+              source: a.source,
+              message: a.message_fr,
+              date_creation: a.date_creation,
+              est_active: a.est_active,
+            }))}
+            filename="airguard_alertes_export.csv"
+          />
+          <button
+            onClick={handleScan}
+            disabled={scanning}
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl font-medium hover:bg-primary-dark transition-colors disabled:opacity-50"
+          >
+            {scanning ? <Loader2 className="w-4 h-4 animate-spin" /> : <BrainCircuit className="w-4 h-4" />}
+            {t("scanML")}
+          </button>
+        </div>
       </div>
 
       {scanResult && (
@@ -151,19 +173,19 @@ export default function AlertsPage() {
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <KPICard
-          title="Alertes publiées actives"
+          title={t("publishedActive")}
           value={activeCount}
           icon={<Bell className="w-6 h-6" />}
           color="#F59E0B"
         />
         <KPICard
-          title="Alertes critiques"
+          title={t("critical")}
           value={criticalCount}
           icon={<AlertTriangle className="w-6 h-6" />}
           color="#EF4444"
         />
         <KPICard
-          title="Brouillons ML en attente"
+          title={t("mlDraftsPending")}
           value={draftCount}
           icon={<BrainCircuit className="w-6 h-6" />}
           color="#8B5CF6"
@@ -175,7 +197,7 @@ export default function AlertsPage() {
         <div className="bg-purple-50 rounded-2xl border border-purple-200 p-6">
           <h3 className="text-sm font-semibold text-purple-900 mb-4 flex items-center gap-2">
             <BrainCircuit className="w-4 h-4" />
-            Alertes détectées par le modèle ML — En attente de validation
+            {t("mlDetected")}
           </h3>
           <div className="space-y-3">
             {drafts.map((alert) => (
@@ -214,7 +236,7 @@ export default function AlertsPage() {
                           className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white rounded-lg text-xs font-medium hover:bg-primary-dark disabled:opacity-50"
                         >
                           {publishing === alert.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />}
-                          Publier
+                          {t("publish")}
                         </button>
                         <button
                           onClick={() => { setEditingAlert(null); setEditMessage(""); }}
@@ -231,21 +253,21 @@ export default function AlertsPage() {
                           className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white rounded-lg text-xs font-medium hover:bg-primary-dark disabled:opacity-50"
                         >
                           {publishing === alert.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />}
-                          Publier
+                          {t("publish")}
                         </button>
                         <button
                           onClick={() => { setEditingAlert(alert.id); setEditMessage(alert.message_fr); }}
                           className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-100 text-amber-700 rounded-lg text-xs font-medium hover:bg-amber-200"
                         >
                           <Pencil className="w-3 h-3" />
-                          Modifier
+                          {t("edit")}
                         </button>
                         <button
                           onClick={() => handleIgnore(alert.id)}
                           className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 text-gray-600 rounded-lg text-xs font-medium hover:bg-gray-200"
                         >
                           <X className="w-3 h-3" />
-                          Ignorer
+                          {t("ignore")}
                         </button>
                       </>
                     )}
@@ -264,24 +286,24 @@ export default function AlertsPage() {
           onChange={(e) => { setFilterSeverity(e.target.value); setPage(0); }}
           className="px-4 py-2 rounded-xl border border-border bg-surface text-sm text-text"
         >
-          <option value="all">Toutes les sévérités</option>
-          <option value="modere">Modéré</option>
-          <option value="grave">Grave</option>
-          <option value="critique">Critique</option>
+          <option value="all">{t("allSeverities")}</option>
+          <option value="modere">{ts("modere")}</option>
+          <option value="grave">{ts("grave")}</option>
+          <option value="critique">{ts("critique")}</option>
         </select>
         <select
           value={filterStatus}
           onChange={(e) => { setFilterStatus(e.target.value); setPage(0); }}
           className="px-4 py-2 rounded-xl border border-border bg-surface text-sm text-text"
         >
-          <option value="all">Tous les statuts</option>
-          <option value="publiee">Publiées</option>
-          <option value="brouillon">Brouillons</option>
-          <option value="active">Actives</option>
-          <option value="resolved">Résolues</option>
+          <option value="all">{t("allStatuses")}</option>
+          <option value="publiee">{t("published")}</option>
+          <option value="brouillon">{t("drafts")}</option>
+          <option value="active">{t("active")}</option>
+          <option value="resolved">{t("resolved")}</option>
         </select>
         <span className="text-sm text-text-secondary ml-auto">
-          {filtered.length} alerte{filtered.length !== 1 ? "s" : ""}
+          {filtered.length} {t("alert")}{filtered.length !== 1 ? "s" : ""}
         </span>
       </div>
 
@@ -290,12 +312,12 @@ export default function AlertsPage() {
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-primary-dark text-white">
-              <th className="px-4 py-3 text-left font-semibold text-xs uppercase tracking-wider">Ville</th>
-              <th className="px-4 py-3 text-left font-semibold text-xs uppercase tracking-wider">Sévérité</th>
-              <th className="px-4 py-3 text-left font-semibold text-xs uppercase tracking-wider">Source</th>
-              <th className="px-4 py-3 text-left font-semibold text-xs uppercase tracking-wider">Message</th>
-              <th className="px-4 py-3 text-left font-semibold text-xs uppercase tracking-wider">Date</th>
-              <th className="px-4 py-3 text-left font-semibold text-xs uppercase tracking-wider">Statut</th>
+              <th className="px-4 py-3 text-left font-semibold text-xs uppercase tracking-wider">{t("tableCity")}</th>
+              <th className="px-4 py-3 text-left font-semibold text-xs uppercase tracking-wider">{t("tableSeverity")}</th>
+              <th className="px-4 py-3 text-left font-semibold text-xs uppercase tracking-wider">{t("tableSource")}</th>
+              <th className="px-4 py-3 text-left font-semibold text-xs uppercase tracking-wider">{t("tableMessage")}</th>
+              <th className="px-4 py-3 text-left font-semibold text-xs uppercase tracking-wider">{t("tableDate")}</th>
+              <th className="px-4 py-3 text-left font-semibold text-xs uppercase tracking-wider">{t("tableStatus")}</th>
             </tr>
           </thead>
           <tbody>
@@ -303,7 +325,7 @@ export default function AlertsPage() {
               <tr>
                 <td colSpan={6} className="px-4 py-12 text-center text-text-secondary">
                   <Shield className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                  Aucune alerte trouvée
+                  {t("noAlertsFound")}
                 </td>
               </tr>
             ) : (
@@ -338,7 +360,7 @@ export default function AlertsPage() {
                         ? "bg-purple-100 text-purple-700"
                         : "bg-gray-100 text-gray-500"
                     }`}>
-                      {alert.statut === "publiee" ? "Publiée" : alert.statut === "brouillon" ? "Brouillon" : "Ignorée"}
+                      {alert.statut === "publiee" ? t("statusPublished") : alert.statut === "brouillon" ? t("statusDraft") : t("statusIgnored")}
                     </span>
                   </td>
                 </tr>
@@ -354,17 +376,17 @@ export default function AlertsPage() {
               disabled={page === 0}
               className="px-3 py-1.5 text-sm rounded-lg border border-border disabled:opacity-40 hover:bg-gray-50"
             >
-              Précédent
+              {tc("previous")}
             </button>
             <span className="text-sm text-text-secondary">
-              Page {page + 1} / {totalPages}
+              {tc("page")} {page + 1} {tc("of")} {totalPages}
             </span>
             <button
               onClick={() => setPage(Math.min(totalPages - 1, page + 1))}
               disabled={page >= totalPages - 1}
               className="px-3 py-1.5 text-sm rounded-lg border border-border disabled:opacity-40 hover:bg-gray-50"
             >
-              Suivant
+              {tc("next")}
             </button>
           </div>
         )}
@@ -374,7 +396,7 @@ export default function AlertsPage() {
       {timelineData.length > 0 && (
         <div className="bg-surface rounded-2xl border border-border p-6">
           <h3 className="text-sm font-semibold text-text mb-4">
-            Timeline des alertes — 30 derniers jours
+            {t("timeline")}
           </h3>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={timelineData} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
@@ -383,9 +405,9 @@ export default function AlertsPage() {
               <YAxis tick={{ fontSize: 11, fill: "#64748B" }} tickLine={false} axisLine={false} allowDecimals={false} />
               <Tooltip contentStyle={{ background: "#fff", border: "1px solid #E2E8F0", borderRadius: 12, fontSize: 13 }} />
               <Legend />
-              <Bar dataKey="critique" name="Critique" stackId="a" fill="#EF4444" />
-              <Bar dataKey="grave" name="Grave" stackId="a" fill="#F97316" />
-              <Bar dataKey="modere" name="Modéré" stackId="a" fill="#EAB308" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="critique" name={ts("critique")} stackId="a" fill="#EF4444" />
+              <Bar dataKey="grave" name={ts("grave")} stackId="a" fill="#F97316" />
+              <Bar dataKey="modere" name={ts("modere")} stackId="a" fill="#EAB308" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>

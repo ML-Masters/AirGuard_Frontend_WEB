@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { useTranslations } from "next-intl";
 import { Upload, FileSpreadsheet, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 import { API_BASE_URL } from "@/lib/constants";
 import { getAccessToken } from "@/lib/auth";
@@ -16,6 +17,8 @@ interface ImportProgress {
 }
 
 export default function ImportPage() {
+  const t = useTranslations("import");
+  const tc = useTranslations("common");
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState<ImportProgress | null>(null);
@@ -26,7 +29,7 @@ export default function ImportPage() {
   const handleFile = (f: File) => {
     const name = f.name.toLowerCase();
     if (!name.endsWith(".xlsx") && !name.endsWith(".csv")) {
-      setError("Format non supporté. Utilisez .xlsx ou .csv");
+      setError(t("unsupportedFormat"));
       return;
     }
     setFile(f);
@@ -59,7 +62,7 @@ export default function ImportPage() {
 
       if (!res.ok) {
         const data = await res.json();
-        setError(data.error || "Erreur lors de l'import");
+        setError(data.error || t("importError"));
         setLoading(false);
         return;
       }
@@ -69,7 +72,7 @@ export default function ImportPage() {
       const decoder = new TextDecoder();
 
       if (!reader) {
-        setError("Streaming non supporté");
+        setError(t("streamingNotSupported"));
         setLoading(false);
         return;
       }
@@ -99,7 +102,7 @@ export default function ImportPage() {
       }
       setLoading(false);
     } catch {
-      setError("Impossible de contacter le serveur");
+      setError(t("serverError"));
       setLoading(false);
     }
   };
@@ -109,16 +112,16 @@ export default function ImportPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-text">Import de données</h1>
+        <h1 className="text-2xl font-bold text-text">{t("title")}</h1>
         <p className="text-text-secondary text-sm mt-1">
-          Importez un fichier météorologique pour générer les indicateurs AQI
+          {t("subtitle")}
         </p>
       </div>
 
       {/* Drop zone */}
       {!loading && !isDone && (
         <div
-          className={`bg-surface rounded-2xl border-2 border-dashed p-12 text-center cursor-pointer transition-colors ${
+          className={`bg-surface rounded-2xl border-2 border-dashed p-6 sm:p-12 text-center cursor-pointer transition-colors ${
             dragOver ? "border-primary bg-primary-bg" : "border-border hover:border-primary/50"
           }`}
           onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
@@ -135,17 +138,17 @@ export default function ImportPage() {
           />
           <Upload className="w-12 h-12 text-primary mx-auto mb-4" />
           <p className="text-text font-medium">
-            Glissez-déposez votre fichier ici
+            {t("dropzone")}
           </p>
           <p className="text-text-secondary text-sm mt-1">
-            ou cliquez pour sélectionner — .xlsx ou .csv
+            {t("dropzoneHint")}
           </p>
         </div>
       )}
 
       {/* Selected file + launch */}
       {file && !loading && !isDone && (
-        <div className="bg-surface rounded-2xl border border-border p-6 flex items-center justify-between">
+        <div className="bg-surface rounded-2xl border border-border p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <FileSpreadsheet className="w-8 h-8 text-primary" />
             <div>
@@ -157,10 +160,10 @@ export default function ImportPage() {
           </div>
           <button
             onClick={handleUpload}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl font-medium hover:bg-primary-dark transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl font-medium hover:bg-primary-dark transition-colors w-full sm:w-auto justify-center"
           >
             <Upload className="w-4 h-4" />
-            Lancer l&apos;import
+            {t("startImport")}
           </button>
         </div>
       )}
@@ -170,7 +173,7 @@ export default function ImportPage() {
         <div className="bg-surface rounded-2xl border border-border p-6">
           <div className="flex items-center gap-3 mb-4">
             <Loader2 className="w-5 h-5 animate-spin text-primary" />
-            <p className="font-medium text-text">Import en cours...</p>
+            <p className="font-medium text-text">{t("importing")}</p>
           </div>
 
           {/* Bar */}
@@ -184,23 +187,23 @@ export default function ImportPage() {
           <div className="flex items-center justify-between text-sm text-text-secondary">
             <span>{progress?.progress || 0}%</span>
             <span>
-              {(progress?.processed || 0).toLocaleString()} / {(progress?.total || 0).toLocaleString()} lignes
+              {(progress?.processed || 0).toLocaleString()} / {(progress?.total || 0).toLocaleString()} {tc("lines")}
             </span>
           </div>
 
           {progress && (
-            <div className="grid grid-cols-3 gap-4 mt-4 pt-4 border-t border-border">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4 pt-4 border-t border-border">
               <div className="text-center">
                 <p className="text-lg font-bold text-primary">{progress.meteo.toLocaleString()}</p>
-                <p className="text-xs text-text-secondary">Relevés météo</p>
+                <p className="text-xs text-text-secondary">{t("meteoRecords")}</p>
               </div>
               <div className="text-center">
                 <p className="text-lg font-bold text-primary">{progress.aqi.toLocaleString()}</p>
-                <p className="text-xs text-text-secondary">Données AQI</p>
+                <p className="text-xs text-text-secondary">{t("aqiData")}</p>
               </div>
               <div className="text-center">
                 <p className="text-lg font-bold text-text-secondary">{progress.skipped.toLocaleString()}</p>
-                <p className="text-xs text-text-secondary">Ignorées</p>
+                <p className="text-xs text-text-secondary">{t("skipped")}</p>
               </div>
             </div>
           )}
@@ -220,40 +223,40 @@ export default function ImportPage() {
         <div className="bg-green-50 rounded-2xl border border-green-200 p-6">
           <div className="flex items-center gap-3 mb-4">
             <CheckCircle className="w-6 h-6 text-green-600" />
-            <p className="text-green-800 font-semibold">Import terminé avec succès !</p>
+            <p className="text-green-800 font-semibold">{t("importSuccess")}</p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div className="text-center">
               <p className="text-2xl font-bold text-green-800">{progress.total.toLocaleString()}</p>
-              <p className="text-xs text-green-600">Lignes lues</p>
+              <p className="text-xs text-green-600">{t("linesRead")}</p>
             </div>
             <div className="text-center">
               <p className="text-2xl font-bold text-green-800">{progress.meteo.toLocaleString()}</p>
-              <p className="text-xs text-green-600">Relevés météo</p>
+              <p className="text-xs text-green-600">{t("meteoRecords")}</p>
             </div>
             <div className="text-center">
               <p className="text-2xl font-bold text-green-800">{progress.aqi.toLocaleString()}</p>
-              <p className="text-xs text-green-600">Données AQI</p>
+              <p className="text-xs text-green-600">{t("aqiData")}</p>
             </div>
             <div className="text-center">
               <p className="text-2xl font-bold text-text-secondary">{progress.skipped.toLocaleString()}</p>
-              <p className="text-xs text-text-secondary">Ignorées (doublons)</p>
+              <p className="text-xs text-text-secondary">{t("skippedDuplicates")}</p>
             </div>
           </div>
           <button
             onClick={() => { setFile(null); setProgress(null); }}
             className="mt-4 px-4 py-2 text-sm text-primary font-medium hover:underline"
           >
-            Importer un autre fichier
+            {t("importAnother")}
           </button>
         </div>
       )}
 
       {/* Info */}
       <div className="bg-surface rounded-2xl border border-border p-6">
-        <h3 className="text-sm font-semibold text-text mb-3">Format attendu</h3>
+        <h3 className="text-sm font-semibold text-text mb-3">{t("expectedFormat")}</h3>
         <p className="text-sm text-text-secondary mb-2">
-          Le fichier doit contenir les colonnes du dataset météo Open-Meteo :
+          {t("formatDescription")}
         </p>
         <div className="flex flex-wrap gap-2">
           {["city", "region", "time", "temperature_2m_mean", "precipitation_sum", "wind_speed_10m_max", "sunshine_duration", "shortwave_radiation_sum", "et0_fao_evapotranspiration"].map((col) => (
@@ -263,7 +266,7 @@ export default function ImportPage() {
           ))}
         </div>
         <p className="text-xs text-text-secondary mt-3">
-          Les doublons sont automatiquement ignorés — vous pouvez importer le même fichier plusieurs fois sans risque.
+          {t("duplicateNote")}
         </p>
       </div>
     </div>

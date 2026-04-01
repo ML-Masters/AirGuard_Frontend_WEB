@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations, useLocale } from "next-intl";
 import {
   AreaChart,
   Area,
@@ -20,6 +21,8 @@ import type { PredictionResult, AQICategory } from "@/lib/types";
 import { getAQIColor } from "@/lib/utils";
 
 export default function PredictionsPage() {
+  const t = useTranslations("predictions");
+  const locale = useLocale();
   const { data: villes } = useVilles();
   const [selectedCity, setSelectedCity] = useState<string>("");
   const [prediction, setPrediction] = useState<PredictionResult | null>(null);
@@ -33,6 +36,8 @@ export default function PredictionsPage() {
     selectedCity ? `ville__nom=${encodeURIComponent(selectedCity)}&est_prediction=true` : ""
   );
 
+  const dateLocale = locale === "en" ? "en-GB" : "fr-FR";
+
   const handlePredict = async () => {
     if (!selectedCity) return;
     setLoading(true);
@@ -45,7 +50,7 @@ export default function PredictionsPage() {
         setPrediction(result);
       }
     } catch (e) {
-      setError("Erreur lors de la prédiction. Vérifiez que la ville est reconnue par le modèle.");
+      setError(t("predictionError"));
     } finally {
       setLoading(false);
     }
@@ -58,7 +63,7 @@ export default function PredictionsPage() {
       const sorted = [...cityAQ].sort((a, b) => a.date_cible.localeCompare(b.date_cible)).slice(-14);
       for (const aq of sorted) {
         data.push({
-          date: new Date(aq.date_cible).toLocaleDateString("fr-FR", { day: "2-digit", month: "short" }),
+          date: new Date(aq.date_cible).toLocaleDateString(dateLocale, { day: "2-digit", month: "short" }),
           aqi: aq.indice_aqi,
           type: "historique",
         });
@@ -68,7 +73,7 @@ export default function PredictionsPage() {
       const sorted = [...cityPredictions].sort((a, b) => a.date_cible.localeCompare(b.date_cible)).slice(0, 7);
       for (const aq of sorted) {
         data.push({
-          date: new Date(aq.date_cible).toLocaleDateString("fr-FR", { day: "2-digit", month: "short" }),
+          date: new Date(aq.date_cible).toLocaleDateString(dateLocale, { day: "2-digit", month: "short" }),
           aqi: aq.indice_aqi,
           type: "prediction",
         });
@@ -82,18 +87,18 @@ export default function PredictionsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-text">Prédictions ML</h1>
+        <h1 className="text-2xl font-bold text-text">{t("title")}</h1>
         <p className="text-text-secondary text-sm mt-1">
-          Prédictions multi-risques par ville
+          {t("subtitle")}
         </p>
       </div>
 
       {/* City selector */}
       <div className="bg-surface rounded-2xl border border-border p-6">
-        <div className="flex items-end gap-4">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-end gap-4">
           <div className="flex-1">
             <label className="block text-sm font-medium text-text mb-2">
-              Sélectionner une ville
+              {t("selectCity")}
             </label>
             <select
               value={selectedCity}
@@ -104,7 +109,7 @@ export default function PredictionsPage() {
               }}
               className="w-full px-4 py-3 rounded-xl border border-border bg-white text-text"
             >
-              <option value="">— Choisir une ville —</option>
+              <option value="">{t("chooseCity")}</option>
               {villes?.map((v) => (
                 <option key={v.id} value={v.nom}>
                   {v.nom} ({v.region_nom})
@@ -115,9 +120,9 @@ export default function PredictionsPage() {
           <button
             onClick={handlePredict}
             disabled={!selectedCity || loading}
-            className="px-6 py-3 bg-primary text-white rounded-xl font-medium hover:bg-primary-dark transition-colors disabled:opacity-50"
+            className="w-full sm:w-auto px-6 py-3 bg-primary text-white rounded-xl font-medium hover:bg-primary-dark transition-colors disabled:opacity-50"
           >
-            {loading ? "Analyse..." : "Lancer la prédiction"}
+            {loading ? t("analyzing") : t("runPrediction")}
           </button>
         </div>
         {error && (
@@ -128,20 +133,20 @@ export default function PredictionsPage() {
       {/* Prediction results */}
       {prediction && (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div className="bg-surface rounded-2xl border border-border p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${getAQIColor(prediction.predictions.qualite_air.categorie as AQICategory)}20` }}>
                   <BrainCircuit className="w-5 h-5" style={{ color: getAQIColor(prediction.predictions.qualite_air.categorie as AQICategory) }} />
                 </div>
                 <div>
-                  <p className="text-xs text-text-secondary">Qualité de l&apos;air</p>
+                  <p className="text-xs text-text-secondary">{t("airQuality")}</p>
                   <p className="text-lg font-bold text-text">AQI {prediction.predictions.qualite_air.aqi_estime}</p>
                 </div>
               </div>
               <AQIBadge categorie={prediction.predictions.qualite_air.categorie as AQICategory} />
               <p className="text-xs text-text-secondary mt-2">
-                PM2.5 : {prediction.predictions.qualite_air.pm25_proxy_ugm3} µg/m³
+                PM2.5 : {prediction.predictions.qualite_air.pm25_proxy_ugm3} \u00b5g/m\u00b3
               </p>
             </div>
 
@@ -151,9 +156,9 @@ export default function PredictionsPage() {
                   <Flame className="w-5 h-5 text-orange-500" />
                 </div>
                 <div>
-                  <p className="text-xs text-text-secondary">Risque thermique</p>
+                  <p className="text-xs text-text-secondary">{t("heatRisk")}</p>
                   <p className="text-lg font-bold text-text">
-                    {prediction.predictions.chaleur_sante.heat_index_ressenti}°C
+                    {prediction.predictions.chaleur_sante.heat_index_ressenti}\u00b0C
                   </p>
                 </div>
               </div>
@@ -165,7 +170,7 @@ export default function PredictionsPage() {
                 {prediction.predictions.chaleur_sante.avertissement}
               </span>
               <p className="text-xs text-text-secondary mt-2">
-                Chaleur extrême : {prediction.predictions.chaleur_sante.chaleur_extreme_0_10}/10
+                {t("extremeHeat")} : {prediction.predictions.chaleur_sante.chaleur_extreme_0_10}/10
               </p>
             </div>
 
@@ -175,7 +180,7 @@ export default function PredictionsPage() {
                   <CloudRain className="w-5 h-5 text-blue-500" />
                 </div>
                 <div>
-                  <p className="text-xs text-text-secondary">Risques naturels</p>
+                  <p className="text-xs text-text-secondary">{t("naturalRisks")}</p>
                   <p className="text-lg font-bold text-text">
                     {prediction.predictions.risques_naturels.categorie_inondation}
                   </p>
@@ -184,11 +189,11 @@ export default function PredictionsPage() {
               <div className="flex items-center gap-3">
                 <Droplets className="w-4 h-4 text-blue-400" />
                 <span className="text-xs text-text-secondary">
-                  Stress hydrique : {prediction.predictions.risques_naturels.stress_hydrique_agricole}
+                  {t("waterStress")} : {prediction.predictions.risques_naturels.stress_hydrique_agricole}
                 </span>
               </div>
               <p className="text-xs text-text-secondary mt-1">
-                Inondation : {prediction.predictions.risques_naturels.risque_inondation_0_10}/10
+                {t("floodRisk")} : {prediction.predictions.risques_naturels.risque_inondation_0_10}/10
               </p>
             </div>
           </div>
@@ -199,7 +204,7 @@ export default function PredictionsPage() {
       {chartData.length > 0 && (
         <div className="bg-surface rounded-2xl border border-border p-6">
           <h3 className="text-sm font-semibold text-text mb-4">
-            Historique et prédictions — {selectedCity}
+            {t("historyAndPredictions")} — {selectedCity}
           </h3>
           <ResponsiveContainer width="100%" height={300}>
             <AreaChart data={chartData} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
@@ -218,7 +223,7 @@ export default function PredictionsPage() {
                   x={chartData[todayIndex]?.date}
                   stroke="#64748B"
                   strokeDasharray="4 4"
-                  label={{ value: "Aujourd'hui", position: "top", fontSize: 11, fill: "#64748B" }}
+                  label={{ value: t("today"), position: "top", fontSize: 11, fill: "#64748B" }}
                 />
               )}
               <Area
@@ -236,7 +241,7 @@ export default function PredictionsPage() {
       {!selectedCity && (
         <div className="bg-surface rounded-2xl border border-border p-12 text-center">
           <BrainCircuit className="w-12 h-12 text-text-secondary mx-auto mb-4" />
-          <p className="text-text-secondary">Sélectionnez une ville pour voir les prédictions</p>
+          <p className="text-text-secondary">{t("selectCityPrompt")}</p>
         </div>
       )}
     </div>

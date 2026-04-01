@@ -2,11 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useLocale } from "next-intl";
 import { isLoggedIn, refreshAccessToken } from "@/lib/auth";
 import { Loader2 } from "lucide-react";
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const locale = useLocale();
   const [checking, setChecking] = useState(true);
   const [authorized, setAuthorized] = useState(false);
 
@@ -23,12 +25,12 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
       if (refreshed) {
         setAuthorized(true);
       } else {
-        router.replace("/fr/login");
+        router.replace(`/${locale}/login`);
       }
       setChecking(false);
     }
     check();
-  }, [router]);
+  }, [router, locale]);
 
   if (checking) {
     return (

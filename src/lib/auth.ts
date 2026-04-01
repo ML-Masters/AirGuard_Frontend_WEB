@@ -103,5 +103,9 @@ export async function fetchWithAuth(url: string, options: RequestInit = {}): Pro
 
 export function logout() {
   clearTokens();
-  window.location.href = "/fr/login";
+  // TODO: Use the current locale instead of hardcoded /fr/. This is a non-component
+  // context so we can't use useLocale(). Consider reading from the URL path or a cookie.
+  const match = window.location.pathname.match(/^\/(fr|en)\//);
+  const locale = match ? match[1] : "fr";
+  window.location.href = `/${locale}/login`;
 }

@@ -1,4 +1,5 @@
 import { API_BASE_URL } from "./constants";
+import { fetchWithAuth } from "./auth";
 import type {
   Ville,
   Region,
@@ -11,13 +12,7 @@ import type {
 } from "./types";
 
 async function fetchAPI<T>(endpoint: string, options?: RequestInit): Promise<T> {
-  const res = await fetch(`${API_BASE_URL}${endpoint}`, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...options?.headers,
-    },
-  });
+  const res = await fetchWithAuth(`${API_BASE_URL}${endpoint}`, options);
   if (!res.ok) throw new Error(`API error: ${res.status}`);
   return res.json();
 }
@@ -50,5 +45,5 @@ export const api = {
     }),
 
   getReportPDF: () =>
-    fetch(`${API_BASE_URL}/air-quality/reports/pdf/`).then((res) => res.blob()),
+    fetchWithAuth(`${API_BASE_URL}/air-quality/reports/pdf/`).then((res) => res.blob()),
 };

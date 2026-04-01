@@ -2,9 +2,10 @@
 
 import useSWR from "swr";
 import { API_BASE_URL } from "@/lib/constants";
+import { fetchWithAuth } from "@/lib/auth";
 import type { Ville, AirQuality, Alert, Meteo, NationalKPIs } from "@/lib/types";
 
-const fetcher = (url: string) => fetch(url).then((r) => r.json());
+const fetcher = (url: string) => fetchWithAuth(url).then((r) => r.json());
 
 export function useVilles() {
   return useSWR<Ville[]>(`${API_BASE_URL}/villes/`, fetcher);

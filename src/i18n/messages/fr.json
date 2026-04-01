@@ -1,0 +1,36 @@
+{
+  "nav": {
+    "dashboard": "Tableau de bord",
+    "map": "Carte",
+    "analytics": "Analytics",
+    "predictions": "Prédictions",
+    "alerts": "Alertes",
+    "reports": "Rapports",
+    "import": "Import données",
+    "apiDocs": "API Docs"
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "subtitle": "Vue d'ensemble de la qualité de l'air au Cameroun",
+    "avgAqi": "AQI moyen national",
+    "criticalCities": "Villes en zone critique",
+    "monitoredCities": "Villes surveillées",
+    "activeAlerts": "Alertes actives",
+    "recentAlerts": "Alertes récentes",
+    "noAlerts": "Aucune alerte active",
+    "regions": "régions"
+  },
+  "aqi": {
+    "Bon": "Bon",
+    "Modere": "Modéré",
+    "Sensible": "Sensible",
+    "Malsain": "Malsain",
+    "Tres_malsain": "Très malsain",
+    "Dangereux": "Dangereux"
+  },
+  "severity": {
+    "modere": "Modéré",
+    "grave": "Grave",
+    "critique": "Critique"
+  }
+}

@@ -6,6 +6,7 @@ import KPICard from "@/components/ui/KPICard";
 import SeverityBadge from "@/components/ui/SeverityBadge";
 import AQIBadge from "@/components/ui/AQIBadge";
 import AQIAreaChart from "@/components/charts/AQIAreaChart";
+import { KPISkeleton, ChartSkeleton, TableSkeleton } from "@/components/ui/LoadingSkeleton";
 import { useVilles, useActiveAlerts, useAirQuality } from "@/hooks/useData";
 import { timeAgo } from "@/lib/utils";
 import type { AQICategory, Ville } from "@/lib/types";
@@ -18,9 +19,11 @@ const DashboardMap = dynamic(() => import("@/components/map/DashboardMap"), {
 });
 
 export default function DashboardHome() {
-  const { data: villes } = useVilles();
-  const { data: alerts } = useActiveAlerts();
-  const { data: airQuality } = useAirQuality("est_prediction=false");
+  const { data: villes, isLoading: loadingVilles } = useVilles();
+  const { data: alerts, isLoading: loadingAlerts } = useActiveAlerts();
+  const { data: airQuality, isLoading: loadingAQ } = useAirQuality("est_prediction=false");
+
+  const isLoading = loadingVilles || loadingAlerts || loadingAQ;
 
   // Compute KPIs from air quality data
   const latestByCity = new Map<number, { indice_aqi: number; categorie: AQICategory; date_cible: string }>();

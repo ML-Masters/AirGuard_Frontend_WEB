@@ -1,0 +1,36 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "map": "Map",
+    "analytics": "Analytics",
+    "predictions": "Predictions",
+    "alerts": "Alerts",
+    "reports": "Reports",
+    "import": "Data Import",
+    "apiDocs": "API Docs"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Air quality overview across Cameroon",
+    "avgAqi": "National avg AQI",
+    "criticalCities": "Critical cities",
+    "monitoredCities": "Monitored cities",
+    "activeAlerts": "Active alerts",
+    "recentAlerts": "Recent alerts",
+    "noAlerts": "No active alerts",
+    "regions": "regions"
+  },
+  "aqi": {
+    "Bon": "Good",
+    "Modere": "Moderate",
+    "Sensible": "Sensitive",
+    "Malsain": "Unhealthy",
+    "Tres_malsain": "Very Unhealthy",
+    "Dangereux": "Hazardous"
+  },
+  "severity": {
+    "modere": "Moderate",
+    "grave": "Severe",
+    "critique": "Critical"
+  }
+}

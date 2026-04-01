@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { Upload, FileSpreadsheet, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 import { API_BASE_URL } from "@/lib/constants";
+import { getAccessToken } from "@/lib/auth";
 
 interface ImportResult {
   success: boolean;
@@ -47,8 +48,10 @@ export default function ImportPage() {
     formData.append("file", file);
 
     try {
+      const token = getAccessToken();
       const res = await fetch(`${API_BASE_URL}/data/import/`, {
         method: "POST",
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
         body: formData,
       });
       const data = await res.json();

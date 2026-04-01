@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -13,6 +14,8 @@ import {
   Upload,
   Wind,
   LogOut,
+  Menu,
+  X,
 } from "lucide-react";
 import { logout } from "@/lib/auth";
 
@@ -29,9 +32,10 @@ const NAV_ITEMS = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const [open, setOpen] = useState(false);
 
-  return (
-    <aside className="w-[280px] bg-primary-dark h-screen fixed left-0 top-0 flex flex-col z-50">
+  const navContent = (
+    <>
       <div className="p-6 flex items-center gap-3">
         <div className="w-10 h-10 bg-white/15 rounded-xl flex items-center justify-center">
           <Wind className="w-6 h-6 text-white" />
@@ -40,9 +44,15 @@ export default function Sidebar() {
           <h1 className="text-white font-bold text-lg leading-tight">AirGuard</h1>
           <p className="text-white/60 text-xs">Cameroun</p>
         </div>
+        <button
+          onClick={() => setOpen(false)}
+          className="ml-auto lg:hidden text-white/60 hover:text-white"
+        >
+          <X className="w-6 h-6" />
+        </button>
       </div>
 
-      <nav className="flex-1 px-3 mt-4 space-y-1">
+      <nav className="flex-1 px-3 mt-4 space-y-1 overflow-y-auto">
         {NAV_ITEMS.map((item) => {
           const isActive =
             pathname === item.href ||
@@ -53,6 +63,7 @@ export default function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
+              onClick={() => setOpen(false)}
               className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
                 isActive
                   ? "bg-white/15 text-white"
@@ -78,6 +89,40 @@ export default function Sidebar() {
           IndabaX Cameroon 2026
         </p>
       </div>
-    </aside>
+    </>
+  );
+
+  return (
+    <>
+      {/* Mobile hamburger */}
+      <button
+        onClick={() => setOpen(true)}
+        className="fixed top-4 left-4 z-50 lg:hidden w-10 h-10 bg-primary-dark rounded-xl flex items-center justify-center shadow-lg"
+      >
+        <Menu className="w-5 h-5 text-white" />
+      </button>
+
+      {/* Mobile overlay */}
+      {open && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={() => setOpen(false)}
+        />
+      )}
+
+      {/* Mobile drawer */}
+      <aside
+        className={`fixed left-0 top-0 h-screen w-[280px] bg-primary-dark flex flex-col z-50 transition-transform duration-300 lg:hidden ${
+          open ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        {navContent}
+      </aside>
+
+      {/* Desktop sidebar */}
+      <aside className="hidden lg:flex w-[280px] bg-primary-dark h-screen fixed left-0 top-0 flex-col z-50">
+        {navContent}
+      </aside>
+    </>
   );
 }

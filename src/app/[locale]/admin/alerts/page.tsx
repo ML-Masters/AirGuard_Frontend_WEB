@@ -125,7 +125,7 @@ export default function AlertsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-text">Alertes</h1>
           <p className="text-text-secondary text-sm mt-1">
@@ -205,7 +205,7 @@ export default function AlertsPage() {
                       </p>
                     )}
                   </div>
-                  <div className="flex items-center gap-2 shrink-0">
+                  <div className="flex flex-wrap items-center gap-2 shrink-0">
                     {editingAlert === alert.id ? (
                       <>
                         <button
@@ -258,7 +258,7 @@ export default function AlertsPage() {
       )}
 
       {/* Filters */}
-      <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center gap-3">
         <select
           value={filterSeverity}
           onChange={(e) => { setFilterSeverity(e.target.value); setPage(0); }}
@@ -286,7 +286,7 @@ export default function AlertsPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-surface rounded-2xl border border-border overflow-hidden">
+      <div className="bg-surface rounded-2xl border border-border overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-primary-dark text-white">

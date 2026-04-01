@@ -11,7 +11,7 @@ export default function AdminLayout({
     <AuthGuard>
       <div className="flex h-full">
         <Sidebar />
-        <main className="ml-[280px] flex-1 p-8 overflow-auto">{children}</main>
+        <main className="flex-1 p-4 pt-16 lg:pt-8 lg:ml-[280px] sm:p-6 lg:p-8 overflow-auto">{children}</main>
         <ChatWidget />
       </div>
     </AuthGuard>

@@ -14,7 +14,7 @@ import type { AQICategory, Ville } from "@/lib/types";
 const DashboardMap = dynamic(() => import("@/components/map/DashboardMap"), {
   ssr: false,
   loading: () => (
-    <div className="bg-surface rounded-2xl border border-border h-[400px] animate-pulse" />
+    <div className="bg-surface rounded-2xl border border-border h-[250px] md:h-[400px] animate-pulse" />
   ),
 });
 

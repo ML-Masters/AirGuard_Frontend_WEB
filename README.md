@@ -9,25 +9,34 @@ Tableau de bord web de surveillance de la qualite de l'air au Cameroun.
 - Tailwind CSS 4
 - Recharts (graphiques)
 - Leaflet + React-Leaflet (carte interactive)
-- SWR (data fetching + cache)
-- next-intl (bilingue FR/EN)
+- SWR (data fetching + cache + polling temps reel)
+- next-intl (bilingue FR/EN complet)
 - Lucide React (icones)
 
 ## Fonctionnalites
 
-- Connexion JWT + authentification
-- Tableau de bord avec KPIs nationaux
-- Carte interactive des 40 villes (Leaflet)
-- Analytics (climat vs AQI, top 10, correlation, saisonnier)
-- Predictions ML par ville (3 risques)
-- Gestion des alertes (brouillon/publier/ignorer)
-- Chatbot IA flottant
-- Rapport PDF telechargeable
-- Import de donnees (drag & drop + progression SSE)
-- Export CSV (dashboard, alertes, analytics)
-- Documentation API integree (Swagger)
-- Bilingue FR/EN avec switch de langue
-- Responsive (mobile, tablette, desktop)
+| Fonctionnalite | Description |
+|----------------|-------------|
+| Authentification | Connexion JWT + AuthGuard |
+| Tableau de bord | KPIs nationaux, graphique 30j, export CSV |
+| Carte interactive | Leaflet, 40 villes, heatmap avec legende et points d'info |
+| Analytics | Climat vs AQI, top 10, correlation, saisonnier, export CSV |
+| Predictions | Page dediee : vue demain + vue semaine par ville |
+| Alertes | Brouillons ML, publier/ignorer/modifier, export CSV |
+| Rapports | Telechargement PDF + CSV, filtre par ville |
+| Chatbot IA | Widget flottant integre |
+| Bilingue FR/EN | Traduction complete (next-intl) avec switch de langue |
+| SWR polling | Rafraichissement automatique des donnees en temps reel |
+| Responsive | Mobile, tablette, desktop |
+
+### Pages supprimees
+
+- ~~Import de donnees~~ (supprime)
+- ~~Documentation API~~ (supprime)
+
+## 40 villes couvertes
+
+Le dashboard couvre les 40 villes principales du Cameroun reparties dans 10 regions.
 
 ## Installation
 

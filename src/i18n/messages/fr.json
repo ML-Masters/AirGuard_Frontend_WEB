@@ -109,7 +109,7 @@
     "title": "Prédictions ML",
     "subtitle": "Prédictions multi-risques par ville",
     "selectCity": "Sélectionner une ville",
-    "chooseCity": "— Choisir une ville —",
+    "chooseCity": "Choisir une ville",
     "runPrediction": "Lancer la prédiction",
     "analyzing": "Analyse...",
     "predictionError": "Erreur lors de la prédiction. Vérifiez que la ville est reconnue par le modèle.",
@@ -121,7 +121,18 @@
     "floodRisk": "Inondation",
     "historyAndPredictions": "Historique et prédictions",
     "today": "Aujourd'hui",
-    "selectCityPrompt": "Sélectionnez une ville pour voir les prédictions"
+    "selectCityPrompt": "Sélectionnez une ville pour voir les prévisions",
+    "tomorrow": "Demain",
+    "thisWeek": "Cette semaine",
+    "calculating": "Calcul des prévisions...",
+    "heat": "Chaleur",
+    "feelsLike": "Ressenti",
+    "extremeHeatRisk": "Risque de chaleur extrême",
+    "normalTemp": "Température normale",
+    "flooding": "Inondation",
+    "drought": "Sécheresse",
+    "waterStressLabel": "Stress hydrique",
+    "weekOf": "Semaine du"
   },
   "import": {
     "title": "Import de données",
@@ -150,14 +161,29 @@
     "subtitle": "Génération et export de rapports",
     "pdfReport": "Rapport PDF",
     "pdfDescription": "Rapport national de la qualité de l'air",
-    "downloadPDF": "Télécharger le PDF",
+    "downloadPDF": "Télécharger PDF",
     "csvExport": "Export CSV",
     "csvDescription": "Export des données brutes",
-    "comingSoon": "Bientôt disponible"
+    "comingSoon": "Bientôt disponible",
+    "filterByCity": "Filtrer par ville",
+    "allCities": "Toutes les villes (national)",
+    "filteredFor": "Rapports filtrés pour",
+    "pdfDesc": "Rapport national complet avec KPIs, top 10 villes, distribution AQI et alertes actives.",
+    "generating": "Génération...",
+    "airQualityData": "Données qualité de l'air",
+    "aqiExportDesc": "Export CSV : AQI, PM2.5, catégorie par ville et par date.",
+    "allCitiesShort": "Toutes les villes.",
+    "exporting": "Export...",
+    "exportCSV": "Exporter CSV",
+    "meteoData": "Données météorologiques",
+    "meteoExportDesc": "Export CSV : température, précipitations, vent, radiation solaire."
   },
   "map": {
     "title": "Carte interactive",
-    "subtitle": "Qualité de l'air en temps réel sur les 40 villes du Cameroun"
+    "subtitle": "Qualité de l'air en temps réel sur les 40 villes du Cameroun",
+    "markers": "Marqueurs",
+    "heatmap": "Carte de chaleur",
+    "heatmapTitle": "Carte de chaleur AQI"
   },
   "apiDocs": {
     "title": "Documentation API",
@@ -174,7 +200,27 @@
     "Sensible": "Sensible",
     "Malsain": "Malsain",
     "Tres_malsain": "Très malsain",
-    "Dangereux": "Dangereux"
+    "Dangereux": "Dangereux",
+    "city": "Ville",
+    "region": "Région",
+    "quality": "Qualité",
+    "aqiIndex": "Indice AQI",
+    "airQuality": "Qualité de l'air",
+    "adviceBon": "Profitez du plein air !",
+    "adviceModere": "Personnes sensibles : restez vigilants.",
+    "adviceSensible": "Limitez les efforts en extérieur.",
+    "adviceMalsain": "Évitez de sortir. Portez un masque.",
+    "adviceTresMalsain": "Restez à l'intérieur !",
+    "adviceDangereux": "URGENCE — ne sortez pas !",
+    "legendBon": "Air pur (0-50)",
+    "legendModere": "Acceptable (51-100)",
+    "legendSensible": "Dégradé (101-150)",
+    "legendMalsain": "Malsain (151-200)",
+    "legendTresMalsain": "Très malsain (201-300)",
+    "legendDangereux": "Dangereux (300+)"
+  },
+  "charts": {
+    "aqiEvolution": "Évolution AQI national — 30 derniers jours"
   },
   "severity": {
     "modere": "Modéré",

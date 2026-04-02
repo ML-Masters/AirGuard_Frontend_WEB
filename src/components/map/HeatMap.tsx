@@ -1,6 +1,7 @@
 "use client";
 
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { useTranslations } from "next-intl";
 import L from "leaflet";
 import type { Ville, AQICategory } from "@/lib/types";
 import { CAMEROON_CENTER, CAMEROON_ZOOM } from "@/lib/constants";
@@ -19,16 +20,9 @@ interface HeatMapProps {
   height?: string;
 }
 
-const AQI_LABELS: Record<string, string> = {
-  Bon: "Air pur",
-  Modere: "Acceptable",
-  Sensible: "Dégradé",
-  Malsain: "Malsain",
-  Tres_malsain: "Très malsain",
-  Dangereux: "Dangereux",
-};
-
 export default function HeatMap({ cities, height = "400px" }: HeatMapProps) {
+  const t = useTranslations("aqi");
+  const tMap = useTranslations("map");
   const heatPoints: [number, number, number][] = cities.map((c) => [
     c.ville.latitude,
     c.ville.longitude,
@@ -66,21 +60,21 @@ export default function HeatMap({ cities, height = "400px" }: HeatMapProps) {
                 <table className="w-full">
                   <tbody>
                     <tr>
-                      <td className="text-gray-500 pr-2 py-0.5">Ville</td>
+                      <td className="text-gray-500 pr-2 py-0.5">{t("city")}</td>
                       <td className="font-semibold py-0.5">{c.ville.nom}</td>
                     </tr>
                     <tr>
-                      <td className="text-gray-500 pr-2 py-0.5">Région</td>
+                      <td className="text-gray-500 pr-2 py-0.5">{t("region")}</td>
                       <td className="py-0.5">{c.ville.region_nom}</td>
                     </tr>
                     <tr>
-                      <td className="text-gray-500 pr-2 py-0.5">Qualité</td>
+                      <td className="text-gray-500 pr-2 py-0.5">{t("quality")}</td>
                       <td className="font-semibold py-0.5" style={{ color: getAQIColor(c.categorie) }}>
-                        {AQI_LABELS[c.categorie] || c.categorie}
+                        {t(c.categorie)}
                       </td>
                     </tr>
                     <tr>
-                      <td className="text-gray-500 pr-2 py-0.5">Indice AQI</td>
+                      <td className="text-gray-500 pr-2 py-0.5">{t("aqiIndex")}</td>
                       <td className="font-semibold py-0.5">{c.indice_aqi}</td>
                     </tr>
                   </tbody>
@@ -93,7 +87,7 @@ export default function HeatMap({ cities, height = "400px" }: HeatMapProps) {
 
       {/* Legend */}
       <div className="absolute bottom-4 left-4 z-[1000] bg-black/80 backdrop-blur-sm rounded-xl p-3 shadow-lg border border-white/10">
-        <p className="text-xs font-semibold text-white mb-2">Carte de chaleur AQI</p>
+        <p className="text-xs font-semibold text-white mb-2">{tMap("heatmapTitle")}</p>
         <div className="flex items-center gap-0.5">
           <div className="w-7 h-3 rounded-l-sm bg-[#22C55E]" />
           <div className="w-7 h-3 bg-[#EAB308]" />
@@ -102,8 +96,8 @@ export default function HeatMap({ cities, height = "400px" }: HeatMapProps) {
           <div className="w-7 h-3 rounded-r-sm bg-[#991B1B]" />
         </div>
         <div className="flex justify-between mt-1">
-          <span className="text-[10px] text-gray-300">Bon</span>
-          <span className="text-[10px] text-gray-300">Dangereux</span>
+          <span className="text-[10px] text-gray-300">{t("Bon")}</span>
+          <span className="text-[10px] text-gray-300">{t("Dangereux")}</span>
         </div>
       </div>
     </div>

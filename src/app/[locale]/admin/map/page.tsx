@@ -59,7 +59,7 @@ export default function MapPage() {
             }`}
           >
             <MapPin className="w-4 h-4" />
-            Marqueurs
+            {t("markers")}
           </button>
           <button
             onClick={() => setMode("heatmap")}
@@ -70,7 +70,7 @@ export default function MapPage() {
             }`}
           >
             <Flame className="w-4 h-4" />
-            Carte de chaleur
+            {t("heatmap")}
           </button>
         </div>
       </div>

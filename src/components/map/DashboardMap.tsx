@@ -18,22 +18,13 @@ interface DashboardMapProps {
   height?: string;
 }
 
-const AQI_LABELS: Record<string, string> = {
-  Bon: "Air pur",
-  Modere: "Acceptable",
-  Sensible: "Dégradé",
-  Malsain: "Malsain",
-  Tres_malsain: "Très malsain",
-  Dangereux: "Dangereux",
-};
-
-const AQI_ADVICE: Record<string, string> = {
-  Bon: "Profitez du plein air !",
-  Modere: "Personnes sensibles : restez vigilants.",
-  Sensible: "Limitez les efforts en extérieur.",
-  Malsain: "Évitez de sortir. Portez un masque.",
-  Tres_malsain: "Restez à l'intérieur !",
-  Dangereux: "URGENCE — ne sortez pas !",
+const AQI_ADVICE_KEYS: Record<string, string> = {
+  Bon: "adviceBon",
+  Modere: "adviceModere",
+  Sensible: "adviceSensible",
+  Malsain: "adviceMalsain",
+  Tres_malsain: "adviceTresMalsain",
+  Dangereux: "adviceDangereux",
 };
 
 export default function DashboardMap({ cities, height = "400px" }: DashboardMapProps) {
@@ -67,27 +58,27 @@ export default function DashboardMap({ cities, height = "400px" }: DashboardMapP
                 <table className="w-full">
                   <tbody>
                     <tr>
-                      <td className="text-gray-500 pr-2 py-0.5">Ville</td>
+                      <td className="text-gray-500 pr-2 py-0.5">{t("city")}</td>
                       <td className="font-semibold py-0.5">{c.ville.nom}</td>
                     </tr>
                     <tr>
-                      <td className="text-gray-500 pr-2 py-0.5">Région</td>
+                      <td className="text-gray-500 pr-2 py-0.5">{t("region")}</td>
                       <td className="py-0.5">{c.ville.region_nom}</td>
                     </tr>
                     <tr>
-                      <td className="text-gray-500 pr-2 py-0.5">Qualité</td>
+                      <td className="text-gray-500 pr-2 py-0.5">{t("quality")}</td>
                       <td className="font-semibold py-0.5" style={{ color: getAQIColor(c.categorie) }}>
-                        {AQI_LABELS[c.categorie] || c.categorie}
+                        {t(c.categorie)}
                       </td>
                     </tr>
                     <tr>
-                      <td className="text-gray-500 pr-2 py-0.5">Indice AQI</td>
+                      <td className="text-gray-500 pr-2 py-0.5">{t("aqiIndex")}</td>
                       <td className="font-semibold py-0.5">{c.indice_aqi}</td>
                     </tr>
                   </tbody>
                 </table>
                 <p className="text-xs mt-2 text-gray-600 italic border-t border-gray-100 pt-2">
-                  {AQI_ADVICE[c.categorie] || ""}
+                  {AQI_ADVICE_KEYS[c.categorie] ? t(AQI_ADVICE_KEYS[c.categorie]) : ""}
                 </p>
               </div>
             </Popup>
@@ -97,19 +88,19 @@ export default function DashboardMap({ cities, height = "400px" }: DashboardMapP
 
       {/* Legend */}
       <div className="absolute bottom-4 left-4 z-[1000] bg-white/95 backdrop-blur-sm rounded-xl p-3 shadow-lg border border-gray-200">
-        <p className="text-xs font-semibold text-gray-800 mb-2">Qualité de l&apos;air</p>
+        <p className="text-xs font-semibold text-gray-800 mb-2">{t("airQuality")}</p>
         <div className="space-y-1">
           {[
-            { color: "#22C55E", label: "Air pur (0-50)" },
-            { color: "#EAB308", label: "Acceptable (51-100)" },
-            { color: "#F97316", label: "Dégradé (101-150)" },
-            { color: "#EF4444", label: "Malsain (151-200)" },
-            { color: "#7C3AED", label: "Très malsain (201-300)" },
-            { color: "#991B1B", label: "Dangereux (300+)" },
+            { color: "#22C55E", key: "legendBon" },
+            { color: "#EAB308", key: "legendModere" },
+            { color: "#F97316", key: "legendSensible" },
+            { color: "#EF4444", key: "legendMalsain" },
+            { color: "#7C3AED", key: "legendTresMalsain" },
+            { color: "#991B1B", key: "legendDangereux" },
           ].map((item) => (
             <div key={item.color} className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
-              <span className="text-[11px] text-gray-700">{item.label}</span>
+              <span className="text-[11px] text-gray-700">{t(item.key)}</span>
             </div>
           ))}
         </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import {
   AreaChart,
   Area,
@@ -27,13 +28,14 @@ function getGradientColor(aqi: number): string {
 }
 
 export default function AQIAreaChart({ data }: AQIAreaChartProps) {
+  const t = useTranslations("charts");
   const avgAqi = data.length > 0 ? data.reduce((s, d) => s + d.aqi, 0) / data.length : 50;
   const fillColor = getGradientColor(avgAqi);
 
   return (
     <div className="bg-surface rounded-2xl border border-border p-6">
       <h3 className="text-sm font-semibold text-text mb-4">
-        Évolution AQI national — 30 derniers jours
+        {t("aqiEvolution")}
       </h3>
       <ResponsiveContainer width="100%" height={280}>
         <AreaChart data={data} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>

@@ -79,7 +79,7 @@ export default function PredictionsPage() {
           onChange={(e) => setSelectedVille(e.target.value)}
           className="flex-1 sm:max-w-xs px-4 py-2.5 rounded-xl border border-border bg-surface text-sm text-text"
         >
-          <option value="">Choisir une ville</option>
+          <option value="">{t("chooseCity")}</option>
           {villes?.map((v) => (
             <option key={v.id} value={v.nom}>{v.nom} — {v.region_nom}</option>
           ))}
@@ -92,7 +92,7 @@ export default function PredictionsPage() {
               mode === "tomorrow" ? "bg-primary text-white" : "bg-surface border border-border text-text"
             }`}
           >
-            Demain
+            {t("tomorrow")}
           </button>
           <button
             onClick={() => setMode("week")}
@@ -100,7 +100,7 @@ export default function PredictionsPage() {
               mode === "week" ? "bg-primary text-white" : "bg-surface border border-border text-text"
             }`}
           >
-            Cette semaine
+            {t("thisWeek")}
           </button>
         </div>
       </div>
@@ -108,14 +108,14 @@ export default function PredictionsPage() {
       {!selectedVille && (
         <div className="bg-surface rounded-2xl border border-border p-12 text-center">
           <Calendar className="w-12 h-12 text-text-secondary/30 mx-auto mb-3" />
-          <p className="text-text-secondary">Sélectionnez une ville pour voir les prévisions</p>
+          <p className="text-text-secondary">{t("selectCityPrompt")}</p>
         </div>
       )}
 
       {loading && (
         <div className="bg-surface rounded-2xl border border-border p-12 text-center">
           <div className="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full mx-auto mb-3" />
-          <p className="text-text-secondary text-sm">Calcul des prévisions...</p>
+          <p className="text-text-secondary text-sm">{t("calculating")}</p>
         </div>
       )}
 
@@ -153,18 +153,18 @@ export default function PredictionsPage() {
             <div className="bg-surface rounded-2xl border border-border p-5">
               <div className="flex items-center gap-2 mb-3">
                 <Thermometer className="w-5 h-5 text-orange-500" />
-                <span className="text-sm font-semibold text-text">Chaleur</span>
+                <span className="text-sm font-semibold text-text">{t("heat")}</span>
               </div>
               <p className="text-2xl font-bold text-text">{tomorrow.chaleur.heat_index}°C</p>
-              <p className="text-text-secondary text-sm">Ressenti</p>
+              <p className="text-text-secondary text-sm">{t("feelsLike")}</p>
               <p className="text-xs mt-2" style={{ color: tomorrow.chaleur.avertissement === "Danger" ? "#EF4444" : "#22C55E" }}>
-                {tomorrow.chaleur.avertissement === "Danger" ? "Risque de chaleur extrême" : "Température normale"}
+                {tomorrow.chaleur.avertissement === "Danger" ? t("extremeHeatRisk") : t("normalTemp")}
               </p>
             </div>
             <div className="bg-surface rounded-2xl border border-border p-5">
               <div className="flex items-center gap-2 mb-3">
                 <Droplets className="w-5 h-5 text-blue-500" />
-                <span className="text-sm font-semibold text-text">Inondation</span>
+                <span className="text-sm font-semibold text-text">{t("flooding")}</span>
               </div>
               <p className="text-2xl font-bold text-text">{tomorrow.risques.inondation}/10</p>
               <p className="text-text-secondary text-sm">{tomorrow.risques.categorie_inondation}</p>
@@ -172,10 +172,10 @@ export default function PredictionsPage() {
             <div className="bg-surface rounded-2xl border border-border p-5">
               <div className="flex items-center gap-2 mb-3">
                 <Wind className="w-5 h-5 text-amber-500" />
-                <span className="text-sm font-semibold text-text">Sécheresse</span>
+                <span className="text-sm font-semibold text-text">{t("drought")}</span>
               </div>
               <p className="text-2xl font-bold text-text">{tomorrow.risques.secheresse.toFixed(1)}</p>
-              <p className="text-text-secondary text-sm">Stress hydrique</p>
+              <p className="text-text-secondary text-sm">{t("waterStressLabel")}</p>
             </div>
           </div>
         </div>
@@ -185,7 +185,7 @@ export default function PredictionsPage() {
       {mode === "week" && week && !loading && (
         <div className="space-y-4">
           <div className="bg-surface rounded-2xl border border-border p-5">
-            <p className="text-text-secondary text-sm">Semaine du {week.semaine}</p>
+            <p className="text-text-secondary text-sm">{t("weekOf")} {week.semaine}</p>
             <p className="text-text font-semibold mt-1">{week.resume}</p>
           </div>
 

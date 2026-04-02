@@ -109,7 +109,7 @@
     "title": "ML Predictions",
     "subtitle": "Multi-risk predictions by city",
     "selectCity": "Select a city",
-    "chooseCity": "— Choose a city —",
+    "chooseCity": "Choose a city",
     "runPrediction": "Run prediction",
     "analyzing": "Analyzing...",
     "predictionError": "Prediction error. Verify the city is recognized by the model.",
@@ -121,7 +121,18 @@
     "floodRisk": "Flood risk",
     "historyAndPredictions": "History and predictions",
     "today": "Today",
-    "selectCityPrompt": "Select a city to view predictions"
+    "selectCityPrompt": "Select a city to view forecasts",
+    "tomorrow": "Tomorrow",
+    "thisWeek": "This week",
+    "calculating": "Calculating forecasts...",
+    "heat": "Heat",
+    "feelsLike": "Feels like",
+    "extremeHeatRisk": "Extreme heat risk",
+    "normalTemp": "Normal temperature",
+    "flooding": "Flooding",
+    "drought": "Drought",
+    "waterStressLabel": "Water stress",
+    "weekOf": "Week of"
   },
   "import": {
     "title": "Data Import",
@@ -153,11 +164,26 @@
     "downloadPDF": "Download PDF",
     "csvExport": "CSV Export",
     "csvDescription": "Raw data export",
-    "comingSoon": "Coming soon"
+    "comingSoon": "Coming soon",
+    "filterByCity": "Filter by city",
+    "allCities": "All cities (national)",
+    "filteredFor": "Reports filtered for",
+    "pdfDesc": "Complete national report with KPIs, top 10 cities, AQI distribution and active alerts.",
+    "generating": "Generating...",
+    "airQualityData": "Air quality data",
+    "aqiExportDesc": "CSV export: AQI, PM2.5, category by city and date.",
+    "allCitiesShort": "All cities.",
+    "exporting": "Exporting...",
+    "exportCSV": "Export CSV",
+    "meteoData": "Meteorological data",
+    "meteoExportDesc": "CSV export: temperature, precipitation, wind, solar radiation."
   },
   "map": {
     "title": "Interactive Map",
-    "subtitle": "Real-time air quality across 40 cities in Cameroon"
+    "subtitle": "Real-time air quality across 40 cities in Cameroon",
+    "markers": "Markers",
+    "heatmap": "Heat map",
+    "heatmapTitle": "AQI Heat Map"
   },
   "apiDocs": {
     "title": "API Documentation",
@@ -174,7 +200,27 @@
     "Sensible": "Sensitive",
     "Malsain": "Unhealthy",
     "Tres_malsain": "Very Unhealthy",
-    "Dangereux": "Hazardous"
+    "Dangereux": "Hazardous",
+    "city": "City",
+    "region": "Region",
+    "quality": "Quality",
+    "aqiIndex": "AQI Index",
+    "airQuality": "Air quality",
+    "adviceBon": "Enjoy outdoor activities!",
+    "adviceModere": "Sensitive people should be cautious.",
+    "adviceSensible": "Limit prolonged outdoor exertion.",
+    "adviceMalsain": "Avoid going outside. Wear a mask.",
+    "adviceTresMalsain": "Stay indoors!",
+    "adviceDangereux": "EMERGENCY — do not go outside!",
+    "legendBon": "Clean air (0-50)",
+    "legendModere": "Acceptable (51-100)",
+    "legendSensible": "Degraded (101-150)",
+    "legendMalsain": "Unhealthy (151-200)",
+    "legendTresMalsain": "Very unhealthy (201-300)",
+    "legendDangereux": "Hazardous (300+)"
+  },
+  "charts": {
+    "aqiEvolution": "National AQI trend — last 30 days"
   },
   "severity": {
     "modere": "Moderate",

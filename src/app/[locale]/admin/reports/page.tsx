@@ -19,12 +19,17 @@ export default function ReportsPage() {
   const handleDownloadPDF = async () => {
     setDownloading("pdf");
     try {
-      const res = await fetchWithAuth(`${API_BASE_URL}/air-quality/reports/pdf/`);
+      const pdfUrl = selectedVille
+        ? `${API_BASE_URL}/air-quality/reports/pdf/?ville_nom=${encodeURIComponent(selectedVille)}`
+        : `${API_BASE_URL}/air-quality/reports/pdf/`;
+      const res = await fetchWithAuth(pdfUrl);
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `Rapport_AirGuard_National.pdf`;
+      a.download = selectedVille
+        ? `Rapport_AirGuard_${selectedVille}.pdf`
+        : `Rapport_AirGuard_National.pdf`;
       a.click();
       URL.revokeObjectURL(url);
     } catch {
@@ -102,13 +107,13 @@ export default function ReportsPage() {
 
       {/* City filter */}
       <div className="bg-surface rounded-2xl border border-border p-6">
-        <h3 className="text-sm font-semibold text-text mb-3">Filtrer par ville</h3>
+        <h3 className="text-sm font-semibold text-text mb-3">{t("filterByCity")}</h3>
         <select
           value={selectedVille}
           onChange={(e) => setSelectedVille(e.target.value)}
           className="w-full sm:w-80 px-4 py-2.5 rounded-xl border border-border bg-white text-sm text-text"
         >
-          <option value="">Toutes les villes (national)</option>
+          <option value="">{t("allCities")}</option>
           {villes?.map((v) => (
             <option key={v.id} value={v.nom}>
               {v.nom} — {v.region_nom}
@@ -117,7 +122,7 @@ export default function ReportsPage() {
         </select>
         {selectedVille && (
           <p className="text-primary text-sm mt-2 font-medium">
-            Rapports filtrés pour : {selectedVille}
+            {t("filteredFor")} : {selectedVille}
           </p>
         )}
       </div>
@@ -129,9 +134,9 @@ export default function ReportsPage() {
           <div className="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center mb-4">
             <FileText className="w-6 h-6 text-red-500" />
           </div>
-          <h3 className="font-semibold text-text">Rapport PDF</h3>
+          <h3 className="font-semibold text-text">{t("pdfReport")}</h3>
           <p className="text-text-secondary text-sm mt-1 flex-1">
-            Rapport national complet avec KPIs, top 10 villes, distribution AQI et alertes actives.
+            {t("pdfDesc")}
           </p>
           <button
             onClick={handleDownloadPDF}
@@ -139,7 +144,7 @@ export default function ReportsPage() {
             className="mt-4 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-white rounded-xl text-sm font-medium hover:bg-primary-dark transition-colors disabled:opacity-50 w-full"
           >
             <Download className="w-4 h-4" />
-            {downloading === "pdf" ? "Génération..." : "Télécharger PDF"}
+            {downloading === "pdf" ? t("generating") : t("downloadPDF")}
           </button>
         </div>
 
@@ -148,10 +153,10 @@ export default function ReportsPage() {
           <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mb-4">
             <BarChart3 className="w-6 h-6 text-green-500" />
           </div>
-          <h3 className="font-semibold text-text">Données qualité de l&apos;air</h3>
+          <h3 className="font-semibold text-text">{t("airQualityData")}</h3>
           <p className="text-text-secondary text-sm mt-1 flex-1">
-            Export CSV : AQI, PM2.5, catégorie par ville et par date.
-            {selectedVille ? ` Filtré pour ${selectedVille}.` : " Toutes les villes."}
+            {t("aqiExportDesc")}
+            {selectedVille ? ` ${t("filteredFor")} ${selectedVille}.` : ` ${t("allCitiesShort")}`}
           </p>
           <button
             onClick={handleExportAQI}
@@ -159,7 +164,7 @@ export default function ReportsPage() {
             className="mt-4 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-green-600 text-white rounded-xl text-sm font-medium hover:bg-green-700 transition-colors disabled:opacity-50 w-full"
           >
             <Download className="w-4 h-4" />
-            {downloading === "aqi" ? "Export..." : "Exporter CSV"}
+            {downloading === "aqi" ? t("exporting") : t("exportCSV")}
           </button>
         </div>
 
@@ -168,10 +173,10 @@ export default function ReportsPage() {
           <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mb-4">
             <Cloud className="w-6 h-6 text-blue-500" />
           </div>
-          <h3 className="font-semibold text-text">Données météorologiques</h3>
+          <h3 className="font-semibold text-text">{t("meteoData")}</h3>
           <p className="text-text-secondary text-sm mt-1 flex-1">
-            Export CSV : température, précipitations, vent, radiation solaire.
-            {selectedVille ? ` Filtré pour ${selectedVille}.` : " Toutes les villes."}
+            {t("meteoExportDesc")}
+            {selectedVille ? ` ${t("filteredFor")} ${selectedVille}.` : ` ${t("allCitiesShort")}`}
           </p>
           <button
             onClick={handleExportMeteo}
@@ -179,7 +184,7 @@ export default function ReportsPage() {
             className="mt-4 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 w-full"
           >
             <Download className="w-4 h-4" />
-            {downloading === "meteo" ? "Export..." : "Exporter CSV"}
+            {downloading === "meteo" ? t("exporting") : t("exportCSV")}
           </button>
         </div>
       </div>

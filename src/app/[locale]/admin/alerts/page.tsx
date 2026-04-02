@@ -99,8 +99,12 @@ export default function AlertsPage() {
       if (res.ok) {
         setScanResult(data.message);
         refreshAlerts();
+      } else if (res.status === 403) {
+        setScanResult("Acces reserve aux administrateurs.");
+      } else if (res.status === 401) {
+        setScanResult("Session expiree. Reconnectez-vous.");
       } else {
-        setScanResult(data.error || t("scanError"));
+        setScanResult(data.error || data.detail || t("scanError"));
       }
     } catch {
       setScanResult(t("serverError"));

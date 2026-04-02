@@ -59,6 +59,34 @@ export const api = {
       body: JSON.stringify({ message }),
     }),
 
+  getPredictionTomorrow: (villeNom: string) =>
+    fetchAPI<{
+      ville: string;
+      date: string;
+      aqi: number;
+      pm25: number;
+      categorie: string;
+      label: string;
+      conseil: string;
+      chaleur: { heat_index: number; extreme: number; avertissement: string };
+      risques: { inondation: number; secheresse: number; categorie_inondation: string };
+    }>(`/predictions/tomorrow/?ville_nom=${encodeURIComponent(villeNom)}`),
+
+  getPredictionWeek: (villeNom: string) =>
+    fetchAPI<{
+      ville: string;
+      semaine: string;
+      resume: string;
+      jours: Array<{
+        jour: string;
+        date: string;
+        aqi: number;
+        categorie: string;
+        label: string;
+        conseil: string;
+      }>;
+    }>(`/predictions/week/?ville_nom=${encodeURIComponent(villeNom)}`),
+
   getReportPDF: () =>
     fetchWithAuth(`${API_BASE_URL}/air-quality/reports/pdf/`).then((res) => res.blob()),
 };

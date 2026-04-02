@@ -1,10 +1,11 @@
 "use client";
 
-import { MapContainer, TileLayer, CircleMarker, Popup } from "react-leaflet";
-import { useTranslations } from "next-intl";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import L from "leaflet";
 import type { Ville, AQICategory } from "@/lib/types";
 import { CAMEROON_CENTER, CAMEROON_ZOOM } from "@/lib/constants";
 import { getAQIColor } from "@/lib/utils";
+import HeatmapLayer from "./HeatmapLayer";
 import "leaflet/dist/leaflet.css";
 
 interface CityAQI {
@@ -13,7 +14,7 @@ interface CityAQI {
   categorie: AQICategory;
 }
 
-interface DashboardMapProps {
+interface HeatMapProps {
   cities: CityAQI[];
   height?: string;
 }
@@ -27,17 +28,13 @@ const AQI_LABELS: Record<string, string> = {
   Dangereux: "Dangereux",
 };
 
-const AQI_ADVICE: Record<string, string> = {
-  Bon: "Profitez du plein air !",
-  Modere: "Personnes sensibles : restez vigilants.",
-  Sensible: "Limitez les efforts en extérieur.",
-  Malsain: "Évitez de sortir. Portez un masque.",
-  Tres_malsain: "Restez à l'intérieur !",
-  Dangereux: "URGENCE — ne sortez pas !",
-};
+export default function HeatMap({ cities, height = "400px" }: HeatMapProps) {
+  const heatPoints: [number, number, number][] = cities.map((c) => [
+    c.ville.latitude,
+    c.ville.longitude,
+    c.indice_aqi,
+  ]);
 
-export default function DashboardMap({ cities, height = "400px" }: DashboardMapProps) {
-  const t = useTranslations("aqi");
   return (
     <div className="bg-surface rounded-2xl border border-border overflow-hidden relative" style={{ height }}>
       <MapContainer
@@ -48,19 +45,21 @@ export default function DashboardMap({ cities, height = "400px" }: DashboardMapP
       >
         <TileLayer
           attribution='&copy; <a href="https://carto.com/">CARTO</a>'
-          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
         />
+        <HeatmapLayer points={heatPoints} />
+
+        {/* Clickable info icons on top of heatmap */}
         {cities.map((c) => (
-          <CircleMarker
+          <Marker
             key={c.ville.id}
-            center={[c.ville.latitude, c.ville.longitude]}
-            radius={Math.max(6, Math.min(c.indice_aqi / 10, 20))}
-            pathOptions={{
-              color: getAQIColor(c.categorie),
-              fillColor: getAQIColor(c.categorie),
-              fillOpacity: 0.7,
-              weight: 2,
-            }}
+            position={[c.ville.latitude, c.ville.longitude]}
+            icon={L.divIcon({
+              className: "",
+              html: `<div style="width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#0F766E;border:2px solid #0F766E;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,0.3);">i</div>`,
+              iconSize: [22, 22],
+              iconAnchor: [11, 11],
+            })}
           >
             <Popup>
               <div className="text-sm min-w-[200px] leading-relaxed">
@@ -86,32 +85,25 @@ export default function DashboardMap({ cities, height = "400px" }: DashboardMapP
                     </tr>
                   </tbody>
                 </table>
-                <p className="text-xs mt-2 text-gray-600 italic border-t border-gray-100 pt-2">
-                  {AQI_ADVICE[c.categorie] || ""}
-                </p>
               </div>
             </Popup>
-          </CircleMarker>
+          </Marker>
         ))}
       </MapContainer>
 
       {/* Legend */}
-      <div className="absolute bottom-4 left-4 z-[1000] bg-white/95 backdrop-blur-sm rounded-xl p-3 shadow-lg border border-gray-200">
-        <p className="text-xs font-semibold text-gray-800 mb-2">Qualité de l&apos;air</p>
-        <div className="space-y-1">
-          {[
-            { color: "#22C55E", label: "Air pur (0-50)" },
-            { color: "#EAB308", label: "Acceptable (51-100)" },
-            { color: "#F97316", label: "Dégradé (101-150)" },
-            { color: "#EF4444", label: "Malsain (151-200)" },
-            { color: "#7C3AED", label: "Très malsain (201-300)" },
-            { color: "#991B1B", label: "Dangereux (300+)" },
-          ].map((item) => (
-            <div key={item.color} className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
-              <span className="text-[11px] text-gray-700">{item.label}</span>
-            </div>
-          ))}
+      <div className="absolute bottom-4 left-4 z-[1000] bg-black/80 backdrop-blur-sm rounded-xl p-3 shadow-lg border border-white/10">
+        <p className="text-xs font-semibold text-white mb-2">Carte de chaleur AQI</p>
+        <div className="flex items-center gap-0.5">
+          <div className="w-7 h-3 rounded-l-sm bg-[#22C55E]" />
+          <div className="w-7 h-3 bg-[#EAB308]" />
+          <div className="w-7 h-3 bg-[#F97316]" />
+          <div className="w-7 h-3 bg-[#EF4444]" />
+          <div className="w-7 h-3 rounded-r-sm bg-[#991B1B]" />
+        </div>
+        <div className="flex justify-between mt-1">
+          <span className="text-[10px] text-gray-300">Bon</span>
+          <span className="text-[10px] text-gray-300">Dangereux</span>
         </div>
       </div>
     </div>

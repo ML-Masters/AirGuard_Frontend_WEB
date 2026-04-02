@@ -20,43 +20,38 @@ const paginatedFetcher = <T,>(url: string): Promise<T[]> =>
     .then((r) => r.json())
     .then((data: PaginatedResponse<T>) => data.results);
 
-const SLOW_DATA_OPTIONS = {
+const DATA_OPTIONS = {
   revalidateOnFocus: false,
-  revalidateIfStale: false,
-  dedupingInterval: 300000, // 5 min
-};
-
-const FAST_DATA_OPTIONS = {
-  revalidateOnFocus: false,
-  dedupingInterval: 60000, // 1 min
+  dedupingInterval: 30000,
+  refreshInterval: 30000, // 30 sec
 };
 
 export function useVilles() {
   return useSWR<Ville[]>(`${API_BASE_URL}/villes/`, paginatedFetcher, {
-    ...SLOW_DATA_OPTIONS,
+    ...DATA_OPTIONS,
     revalidateIfStale: false,
   });
 }
 
 export function useAirQuality(params?: string) {
   const url = `${API_BASE_URL}/air-quality/${params ? `?${params}` : ""}`;
-  return useSWR<AirQuality[]>(url, paginatedFetcher, SLOW_DATA_OPTIONS);
+  return useSWR<AirQuality[]>(url, paginatedFetcher, DATA_OPTIONS);
 }
 
 export function useNationalKPIs() {
-  return useSWR<NationalKPIs>(`${API_BASE_URL}/air-quality/national_kpis/`, fetcher, SLOW_DATA_OPTIONS);
+  return useSWR<NationalKPIs>(`${API_BASE_URL}/air-quality/national_kpis/`, fetcher, DATA_OPTIONS);
 }
 
 export function useActiveAlerts() {
   // /alerts/active/ returns a direct array (custom action, not paginated)
-  return useSWR<Alert[]>(`${API_BASE_URL}/alerts/active/`, fetcher, FAST_DATA_OPTIONS);
+  return useSWR<Alert[]>(`${API_BASE_URL}/alerts/active/`, fetcher, DATA_OPTIONS);
 }
 
 export function useAlerts() {
-  return useSWR<Alert[]>(`${API_BASE_URL}/alerts/`, paginatedFetcher, FAST_DATA_OPTIONS);
+  return useSWR<Alert[]>(`${API_BASE_URL}/alerts/`, paginatedFetcher, DATA_OPTIONS);
 }
 
 export function useMeteo(params?: string) {
   const url = `${API_BASE_URL}/meteo/${params ? `?${params}` : ""}`;
-  return useSWR<Meteo[]>(url, paginatedFetcher, SLOW_DATA_OPTIONS);
+  return useSWR<Meteo[]>(url, paginatedFetcher, DATA_OPTIONS);
 }

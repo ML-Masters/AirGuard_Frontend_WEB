@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useTranslations, useLocale } from "next-intl";
+import { Link, usePathname } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 import {
   LayoutDashboard,
   Map,
@@ -11,8 +10,6 @@ import {
   BrainCircuit,
   Bell,
   FileText,
-  Code2,
-  Upload,
   Wind,
   LogOut,
   Menu,
@@ -28,23 +25,20 @@ const NAV_KEYS = [
   { path: "admin/predictions", key: "predictions", icon: BrainCircuit },
   { path: "admin/alerts", key: "alerts", icon: Bell },
   { path: "admin/reports", key: "reports", icon: FileText },
-  { path: "admin/import", key: "import", icon: Upload },
-  { path: "admin/api-docs", key: "apiDocs", icon: Code2 },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const t = useTranslations();
-  const locale = useLocale();
 
   const navItems = NAV_KEYS.map((item) => ({
-    href: `/${locale}/${item.path}`,
+    href: `/${item.path}`,
     label: t(`nav.${item.key}`),
     icon: item.icon,
   }));
 
-  const adminBase = `/${locale}/admin`;
+  const adminBase = "/admin";
 
   const navContent = (
     <>

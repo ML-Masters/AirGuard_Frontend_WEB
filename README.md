@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AirGuard Dashboard
 
-## Getting Started
+Tableau de bord web de surveillance de la qualite de l'air au Cameroun.
 
-First, run the development server:
+## Stack technique
+
+- Next.js 16 (App Router)
+- React 19 + TypeScript
+- Tailwind CSS 4
+- Recharts (graphiques)
+- Leaflet + React-Leaflet (carte interactive)
+- SWR (data fetching + cache)
+- next-intl (bilingue FR/EN)
+- Lucide React (icones)
+
+## Fonctionnalites
+
+- Connexion JWT + authentification
+- Tableau de bord avec KPIs nationaux
+- Carte interactive des 40 villes (Leaflet)
+- Analytics (climat vs AQI, top 10, correlation, saisonnier)
+- Predictions ML par ville (3 risques)
+- Gestion des alertes (brouillon/publier/ignorer)
+- Chatbot IA flottant
+- Rapport PDF telechargeable
+- Import de donnees (drag & drop + progression SSE)
+- Export CSV (dashboard, alertes, analytics)
+- Documentation API integree (Swagger)
+- Bilingue FR/EN avec switch de langue
+- Responsive (mobile, tablette, desktop)
+
+## Installation
 
 ```bash
+git clone https://github.com/ML-Masters/AirGuard_Frontend_WEB.git
+cd AirGuard_Frontend_WEB
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Deploiement
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- CI/CD GitHub Actions
+- VPS + SSL
+- URL : https://airguard-cm.duckdns.org
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Equipe
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+ML Masters — Hackathon IndabaX Cameroun 2026

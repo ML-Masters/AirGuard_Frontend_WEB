@@ -15,6 +15,7 @@ import {
   ComposedChart,
   Area,
   Legend,
+  Cell,
 } from "recharts";
 import { useAirQuality, useMeteo, useVilles } from "@/hooks/useData";
 import KPICard from "@/components/ui/KPICard";
@@ -220,7 +221,7 @@ export default function AnalyticsPage() {
               <Tooltip contentStyle={{ background: "#fff", border: "1px solid #E2E8F0", borderRadius: 12, fontSize: 13 }} />
               <Bar dataKey="indice_aqi" name="AQI" radius={[0, 6, 6, 0]}>
                 {top10.map((entry, i) => (
-                  <rect key={i} fill={getAQIColor(entry.categorie)} />
+                  <Cell key={i} fill={getAQIColor(entry.categorie)} />
                 ))}
               </Bar>
             </BarChart>
@@ -240,7 +241,7 @@ export default function AnalyticsPage() {
               <Tooltip contentStyle={{ background: "#fff", border: "1px solid #E2E8F0", borderRadius: 12, fontSize: 13 }} />
               <Bar dataKey="aqi" name={t("avgAqi")} radius={[6, 6, 0, 0]}>
                 {seasonalData.map((entry, i) => (
-                  <rect key={i} fill={entry.saison === "dry" ? "#F59E0B" : "#3B82F6"} />
+                  <Cell key={i} fill={entry.saison === "dry" ? "#F59E0B" : "#3B82F6"} />
                 ))}
               </Bar>
             </BarChart>

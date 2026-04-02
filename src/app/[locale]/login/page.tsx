@@ -1,15 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useTranslations, useLocale } from "next-intl";
+import { useRouter } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 import { Wind, LogIn, Loader2, Eye, EyeOff } from "lucide-react";
 import { login } from "@/lib/auth";
 
 export default function LoginPage() {
   const router = useRouter();
   const t = useTranslations("login");
-  const locale = useLocale();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -25,7 +24,7 @@ export default function LoginPage() {
     setLoading(false);
 
     if (result.success) {
-      router.push(`/${locale}/admin`);
+      router.push("/admin");
     } else {
       setError(result.error || t("error"));
     }

@@ -157,14 +157,17 @@ export default function AlertsPage() {
             }))}
             filename="airguard_alertes_export.csv"
           />
-          <button
-            onClick={handleScan}
-            disabled={scanning}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl font-medium hover:bg-primary-dark transition-colors disabled:opacity-50"
-          >
-            {scanning ? <Loader2 className="w-4 h-4 animate-spin" /> : <BrainCircuit className="w-4 h-4" />}
-            {t("scanML")}
-          </button>
+          <div className="flex flex-col items-end gap-1">
+            <button
+              onClick={handleScan}
+              disabled={scanning}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl font-medium hover:bg-primary-dark transition-colors disabled:opacity-50"
+            >
+              {scanning ? <Loader2 className="w-4 h-4 animate-spin" /> : <BrainCircuit className="w-4 h-4" />}
+              {scanning ? "Analyse en cours..." : "Analyser la qualite de l'air"}
+            </button>
+            <span className="text-[11px] text-text-secondary">Detecte les villes ou l&apos;air est dangereux</span>
+          </div>
         </div>
       </div>
 

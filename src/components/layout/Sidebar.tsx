@@ -10,7 +10,6 @@ import {
   BrainCircuit,
   Bell,
   FileText,
-  Wind,
   LogOut,
   Menu,
   X,
@@ -43,9 +42,7 @@ export default function Sidebar() {
   const navContent = (
     <>
       <div className="p-6 flex items-center gap-3">
-        <div className="w-10 h-10 bg-white/15 rounded-xl flex items-center justify-center">
-          <Wind className="w-6 h-6 text-white" />
-        </div>
+        <img src="/logo.png" alt="AirGuard" className="w-10 h-10 rounded-xl" />
         <div>
           <h1 className="text-white font-bold text-lg leading-tight">AirGuard</h1>
           <p className="text-white/60 text-xs">Cameroun</p>

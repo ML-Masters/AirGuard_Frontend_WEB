@@ -104,7 +104,7 @@ export default function Sidebar() {
       {/* Mobile hamburger */}
       <button
         onClick={() => setOpen(true)}
-        className="fixed top-4 left-4 z-50 lg:hidden w-10 h-10 bg-primary-dark rounded-xl flex items-center justify-center shadow-lg"
+        className="fixed top-4 left-4 z-[999] lg:hidden w-10 h-10 bg-primary-dark rounded-xl flex items-center justify-center shadow-lg"
       >
         <Menu className="w-5 h-5 text-white" />
       </button>
@@ -112,14 +112,14 @@ export default function Sidebar() {
       {/* Mobile overlay */}
       {open && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          className="fixed inset-0 bg-black/50 z-[998] lg:hidden"
           onClick={() => setOpen(false)}
         />
       )}
 
       {/* Mobile drawer */}
       <aside
-        className={`fixed left-0 top-0 h-screen w-[280px] bg-primary-dark flex flex-col z-50 transition-transform duration-300 lg:hidden ${
+        className={`fixed left-0 top-0 h-screen w-[280px] bg-primary-dark flex flex-col z-[999] transition-transform duration-300 lg:hidden ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -127,7 +127,7 @@ export default function Sidebar() {
       </aside>
 
       {/* Desktop sidebar */}
-      <aside className="hidden lg:flex w-[280px] bg-primary-dark h-screen fixed left-0 top-0 flex-col z-50">
+      <aside className="hidden lg:flex w-[280px] bg-primary-dark h-screen fixed left-0 top-0 flex-col z-[999]">
         {navContent}
       </aside>
     </>

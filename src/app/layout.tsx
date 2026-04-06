@@ -7,26 +7,40 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
+const siteUrl = "https://airguard-cm.duckdns.org";
+
 export const metadata: Metadata = {
-  title: "AirGuard Cameroun",
+  metadataBase: new URL(siteUrl),
+  title: "AirGuard Cameroun - Surveillance et prédiction de la qualité de l'air",
   description:
-    "Plateforme de surveillance et prediction de la qualite de l'air au Cameroun. IA, predictions multi-risques et alertes en temps reel pour 40 villes.",
+    "Plateforme IA de surveillance et prédiction de la qualité de l'air dans 40 villes du Cameroun. Alertes en temps réel, prédictions multi-risques et conseils santé personnalisés.",
   openGraph: {
-    title: "AirGuard Cameroun",
+    title: "AirGuard Cameroun - Surveillance IA de la qualité de l'air",
     description:
-      "Surveillance et prediction de la qualite de l'air au Cameroun par intelligence artificielle.",
+      "Surveillance et prédiction de la qualité de l'air au Cameroun par intelligence artificielle. 40 villes, 5 modèles ML, notifications push.",
+    url: siteUrl,
     siteName: "AirGuard Cameroun",
     type: "website",
     locale: "fr_FR",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "AirGuard Cameroun",
+      },
+    ],
   },
   twitter: {
-    card: "summary",
-    title: "AirGuard Cameroun",
+    card: "summary_large_image",
+    title: "AirGuard Cameroun - Surveillance IA de la qualité de l'air",
     description:
-      "Surveillance et prediction de la qualite de l'air au Cameroun par intelligence artificielle.",
+      "Surveillance et prédiction de la qualité de l'air au Cameroun par intelligence artificielle.",
+    images: ["/og-image.jpg"],
   },
   icons: {
     icon: "/icon.svg",
+    apple: "/logo.png",
   },
 };
 

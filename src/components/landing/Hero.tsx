@@ -39,7 +39,7 @@ export default function Hero() {
           className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-8"
         >
           <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-          <span className="text-white/90 text-sm font-medium">Hackathon IndabaX Cameroun 2026</span>
+          <span className="text-white/90 text-sm font-medium">40 villes surveillees en temps reel</span>
         </motion.div>
 
         <motion.div

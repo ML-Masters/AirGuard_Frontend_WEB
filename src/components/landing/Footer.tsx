@@ -18,7 +18,7 @@ export default function Footer() {
             </div>
             <p className="text-white/60 text-sm leading-relaxed max-w-sm">
               Plateforme IA de surveillance et prédiction de la qualité de
-              l&apos;air au Cameroun. Hackathon IndabaX Cameroun 2026.
+              l&apos;air au Cameroun. Par l&apos;equipe ML Masters.
             </p>
           </div>
 
@@ -68,7 +68,7 @@ export default function Footer() {
 
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-white/40 text-xs">
-            © 2026 ML Masters. Fait pour le Hackathon IndabaX Cameroun 2026.
+            © 2026 ML Masters. Tous droits reserves.
           </p>
           <div className="flex items-center gap-2 text-white/40 text-xs">
             <Mail className="w-3 h-3" />

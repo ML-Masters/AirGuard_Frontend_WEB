@@ -63,7 +63,8 @@ export default function Download() {
 
           {/* Mobile card */}
           <motion.a
-            href="https://github.com/ML-Masters/AirGuard_Frontend_Mobile/raw/main/composeApp/release/composeApp-release.apk"
+            href="https://github.com/ML-Masters/AirGuard_Frontend_Mobile/raw/main/composeApp/release/AirGuard.apk"
+            download="AirGuard.apk"
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
